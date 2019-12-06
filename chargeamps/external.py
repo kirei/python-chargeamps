@@ -65,7 +65,8 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def get_chargepoints(self) -> List[ChargePoint]:
         """Get all owned chargepoints"""
-        response = await self._get('/api/v3/chargepoints/owned')
+        request_uri = '/api/v3/chargepoints/owned'
+        response = await self._get(request_uri)
         res = []
         for chargepoint in await response.json():
             res.append(ChargePoint.from_dict(chargepoint))
@@ -73,7 +74,8 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def get_chargingsessions(self, charge_point_id: str) -> List[ChargingSession]:
         """Get all charging sessions"""
-        response = await self._get(f'/api/v3/chargepoints/{charge_point_id}/chargingsessions')
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions'
+        response = await self._get(request_uri)
         res = []
         for session in await response.json():
             for key in ['startTime', 'endTime']:
@@ -84,13 +86,15 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def get_chargepoint_status(self, charge_point_id: str) -> ChargePointStatus:
         """Get charge point status"""
-        response = await self._get(f'/api/v3/chargepoints/{charge_point_id}/status')
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/status'
+        response = await self._get(request_uri)
         print(await response.text())
         return ChargePointStatus.from_dict(await response.json())
 
     async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: str) -> ChargePointConnectorSettings:
         """Get all owned chargepoints"""
-        response = await self._get(f'/api/v3/chargepoints/{charge_point_id}/connectors/{connector_id}/settings')
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/connectors/{connector_id}/settings'
+        response = await self._get(request_uri)
         return ChargePointConnectorSettings.from_dict(await response.json())
 
     async def set_chargepoint_connector_settings(self, settings: ChargePointConnectorSettings) -> None:
