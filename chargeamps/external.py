@@ -8,8 +8,8 @@ from typing import List
 import aiohttp
 import jwt
 
-from .base import (ChargeAmpsClient, ChargePoint, ChargePointStatus,
-                   ChargingSession)
+from .base import (ChargeAmpsClient, ChargePoint, ChargePointConnectorSettings,
+                   ChargePointStatus, ChargingSession)
 
 API_BASE_URL = "https://ca-externalapi.azurewebsites.net"
 
@@ -55,6 +55,14 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
                                      ssl=self._ssl,
                                      headers=headers, **kwargs)
 
+    async def _put(self, path, **kwargs):
+        await self._ensure_token()
+        headers = kwargs.pop('headers', self._headers)
+        return await self._session.put(f"{self._base_url}/{path}",
+                                       ssl=self._ssl,
+                                       headers=headers, **kwargs)
+
+
     async def get_chargepoints(self) -> List[ChargePoint]:
         """Get all owned chargepoints"""
         response = await self._get('/api/v3/chargepoints/owned')
@@ -79,3 +87,16 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         response = await self._get(f'/api/v3/chargepoints/{charge_point_id}/status')
         print(await response.text())
         return ChargePointStatus.from_dict(await response.json())
+
+    async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: str) -> ChargePointConnectorSettings:
+        """Get all owned chargepoints"""
+        response = await self._get(f'/api/v3/chargepoints/{charge_point_id}/connectors/{connector_id}/settings')
+        return ChargePointConnectorSettings.from_dict(await response.json())
+
+    async def set_chargepoint_connector_settings(self, settings: ChargePointConnectorSettings) -> None:
+        """Get all owned chargepoints"""
+        payload = settings.to_dict()
+        charge_point_id = settings.charge_point_id
+        connector_id = settings.connector_id
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/connectors/{connector_id}/settings'
+        await self._put(request_uri, json=payload)
