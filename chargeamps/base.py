@@ -37,6 +37,14 @@ class ChargePoint(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
+class ChargePointStatus(object):
+    id: str
+    status: str
+    connector_statuses: List[ChargePointConnectorStatus]
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True)
 class ChargePointConnectorStatus(object):
     charge_point_id: str
     connector_id: int
@@ -49,10 +57,11 @@ class ChargePointConnectorStatus(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargePointStatus(object):
-    id: str
-    status: str
-    connector_statuses: List[ChargePointConnectorStatus]
+class ChargePointConnectorSettings(object):
+    charge_point_id: str
+    connector_id: int
+    max_current: int
+    mode: str
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
