@@ -24,5 +24,10 @@ setup(
         'marshmallow',
         'pyjwt',
         'setuptools',
-    ]
+    ],
+    entry_points={
+        "console_scripts": [
+            "chargeamps = chargeamps.cli:main"
+        ]
+    }
 )
