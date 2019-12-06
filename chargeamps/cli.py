@@ -169,7 +169,11 @@ async def main_loop() -> None:
 
 
 def main() -> None:
-    asyncio.get_event_loop().run_until_complete(main_loop())
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(main_loop())
+    finally:
+        loop.close()
 
 
 if __name__ == "__main__":
