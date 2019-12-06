@@ -1,4 +1,4 @@
-"""Charge-Amps Cloud API Client"""
+"""Charge-Amps External API Client"""
 
 import asyncio
 import re
