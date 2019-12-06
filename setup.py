@@ -3,7 +3,6 @@
 from setuptools import setup
 from chargeamps import __version__
 
-
 setup(
     name='chargeamps',
     version=__version__,
@@ -20,6 +19,7 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     url='https://github.com/kirei/python-chargeamps',
+    python_requires=">=3.6.1",
     packages=['chargeamps'],
     install_requires=[
         'aiohttp',
