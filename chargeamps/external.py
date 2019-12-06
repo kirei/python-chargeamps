@@ -88,7 +88,6 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         """Get charge point status"""
         request_uri = f'/api/v3/chargepoints/{charge_point_id}/status'
         response = await self._get(request_uri)
-        print(await response.text())
         return ChargePointStatus.from_dict(await response.json())
 
     async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: str) -> ChargePointConnectorSettings:
