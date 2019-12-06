@@ -14,7 +14,9 @@ setup(
     keywords='ev',
     classifiers=[
         'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 3 :: Only'
+        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     url='https://github.com/kirei/python-chargeamps',
     packages=['chargeamps'],
