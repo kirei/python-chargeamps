@@ -12,12 +12,15 @@ async def test():
     chargepoints = await client.get_chargepoints()
     print(chargepoints)
 
-
     status = await client.get_chargepoint_status(chargepoints[0].id)
-    print(status)
+    print("Status:", status)
 
-    status = await client.get_chargingsessions(chargepoints[0].id)
-    print(status)
+    for c in status.connector_statuses:
+        settings = await client.get_chargepoint_connector_settings(c.charge_point_id, c.connector_id)
+        print("Before:", settings)
+        settings.max_current = 6
+        await client.set_chargepoint_connector_settings(settings)
+        print("After:", settings)
 
     await client.shutdown()
 
