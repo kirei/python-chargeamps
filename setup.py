@@ -26,6 +26,7 @@ setup(
         'asyncio',
         'dataclasses',
         'dataclasses-json',
+        'isodate',
         'marshmallow',
         'pyjwt',
         'setuptools',
