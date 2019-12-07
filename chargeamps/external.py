@@ -75,9 +75,6 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         response = await self._get(request_uri)
         res = []
         for session in await response.json():
-            for key in ['startTime', 'endTime']:
-                if re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d\d$', session[key]):
-                    session[key] += '0'
             res.append(ChargingSession.from_dict(session))
         return res
 
