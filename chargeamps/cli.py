@@ -182,7 +182,9 @@ async def main_loop() -> None:
         res = await args.func(client, args)
     except ClientResponseError as exc:
         sys.stderr.write(str(exc))
-    except ValueError:
+    except ValueError as exc:
+        if args.debug:
+            raise exc
         parser.print_help()
         await client.shutdown()
         sys.exit(0)
