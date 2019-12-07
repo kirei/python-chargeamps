@@ -14,8 +14,6 @@ from .external import ChargeAmpsExternalClient
 logger = logging.getLogger(__name__)
 
 
-
-
 async def get_chargepoint_id(client: ChargeAmpsClient, args: argparse.Namespace) -> str:
     if args.charge_point_id:
         return args.charge_point_id
@@ -44,7 +42,7 @@ async def command_get_chargepoint_status(client: ChargeAmpsClient, args: argpars
 async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
     for session in await client.get_chargingsessions(charge_point_id):
-        if args.connector_id is None or args.connector_id==session.connector_id:
+        if args.connector_id is None or args.connector_id == session.connector_id:
             print(json.dumps(session.to_dict(), indent=4))
 
 
@@ -91,6 +89,7 @@ def add_arg_connector(parser, required=False):
                         type=int,
                         required=required,
                         help="Connector ID")
+
 
 async def main_loop() -> None:
     """Main function"""
@@ -156,7 +155,7 @@ async def main_loop() -> None:
                                       api_key=config['api_key'])
 
     try:
-        res = await args.func(client, args)
+        await args.func(client, args)
     except ClientResponseError as exc:
         sys.stderr.write(str(exc))
     except ValueError as exc:

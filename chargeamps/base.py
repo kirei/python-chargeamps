@@ -1,6 +1,6 @@
 """Base class and data classes for ChargeAmps API"""
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional

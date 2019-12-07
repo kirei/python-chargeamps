@@ -52,16 +52,13 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         await self._ensure_token()
         headers = kwargs.pop('headers', self._headers)
         return await self._session.get(f"{self._base_url}/{path}",
-                                     ssl=self._ssl,
-                                     headers=headers, **kwargs)
+                                       ssl=self._ssl, headers=headers, **kwargs)
 
     async def _put(self, path, **kwargs):
         await self._ensure_token()
         headers = kwargs.pop('headers', self._headers)
         return await self._session.put(f"{self._base_url}/{path}",
-                                       ssl=self._ssl,
-                                       headers=headers, **kwargs)
-
+                                       ssl=self._ssl, headers=headers, **kwargs)
 
     async def get_chargepoints(self) -> List[ChargePoint]:
         """Get all owned chargepoints"""
