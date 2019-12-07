@@ -42,8 +42,8 @@ class ChargePointConnectorStatus(object):
     connector_id: int
     total_consumption_kwh: float
     status: str
-    start_time: Optional[datetime] = datetime_field
-    end_time: Optional[datetime] = datetime_field
+    start_time: Optional[datetime] = datetime_field()
+    end_time: Optional[datetime] = datetime_field()
     session_id: Optional[str] = None
 
 
