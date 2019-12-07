@@ -69,7 +69,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             res.append(ChargePoint.from_dict(chargepoint))
         return res
 
-    async def get_chargingsessions(self, charge_point_id: str) -> List[ChargingSession]:
+    async def get_all_chargingsessions(self, charge_point_id: str) -> List[ChargingSession]:
         """Get all charging sessions"""
         request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions'
         response = await self._get(request_uri)
@@ -78,13 +78,19 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             res.append(ChargingSession.from_dict(session))
         return res
 
+    async def get_chargingsession(self, charge_point_id: str, session: int) -> ChargingSession:
+        """Get charging session"""
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions/{session}'
+        response = await self._get(request_uri)
+        return ChargingSession.from_dict(await response.json())
+
     async def get_chargepoint_status(self, charge_point_id: str) -> ChargePointStatus:
         """Get charge point status"""
         request_uri = f'/api/v3/chargepoints/{charge_point_id}/status'
         response = await self._get(request_uri)
         return ChargePointStatus.from_dict(await response.json())
 
-    async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: str) -> ChargePointConnectorSettings:
+    async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: int) -> ChargePointConnectorSettings:
         """Get all owned chargepoints"""
         request_uri = f'/api/v3/chargepoints/{charge_point_id}/connectors/{connector_id}/settings'
         response = await self._get(request_uri)

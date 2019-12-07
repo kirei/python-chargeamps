@@ -41,9 +41,12 @@ async def command_get_chargepoint_status(client: ChargeAmpsClient, args: argpars
 
 async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
-    for session in await client.get_chargingsessions(charge_point_id):
-        if args.connector_id is None or args.connector_id == session.connector_id:
-            print(json.dumps(session.to_dict(), indent=4))
+    if args.session:
+        session = await client.get_chargingsession(charge_point_id, args.session)
+    else:
+        for session in await client.get_all_chargingsessions(charge_point_id):
+            if args.connector_id is None or args.connector_id == session.connector_id:
+                print(json.dumps(session.to_dict(), indent=4))
 
 
 async def command_get_chargepoint_settings(client: ChargeAmpsClient, args: argparse.Namespace):
@@ -117,6 +120,12 @@ async def main_loop() -> None:
     parser_sessions.set_defaults(func=command_get_chargepoint_sessions)
     add_arg_chargepoint(parser_sessions)
     add_arg_connector(parser_sessions)
+    parser_sessions.add_argument('--session',
+                                 dest='session',
+                                 metavar='ID',
+                                 type=int,
+                                 required=False,
+                                 help="Charging session")
 
     parser_get = subparsers.add_parser('get', help="Get chargepoint settings")
     parser_get.set_defaults(func=command_get_chargepoint_settings)
