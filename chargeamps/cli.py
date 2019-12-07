@@ -75,6 +75,23 @@ async def command_set_chargepoint_settings(client: ChargeAmpsClient, args: argpa
     await client.set_chargepoint_connector_settings(settings)
 
 
+def add_arg_chargepoint(parser, required=False):
+    parser.add_argument('--chargepoint',
+                        dest='charge_point_id',
+                        metavar='ID',
+                        type=str,
+                        required=required,
+                        help="ChargePoint ID")
+
+
+def add_arg_connector(parser, required=False):
+    parser.add_argument('--connector',
+                        dest='connector_id',
+                        metavar='ID',
+                        type=int,
+                        required=required,
+                        help="Connector ID")
+
 async def main_loop() -> None:
     """Main function"""
 
@@ -93,63 +110,24 @@ async def main_loop() -> None:
     parser_list.set_defaults(func=command_list_chargepoints)
 
     parser_status = subparsers.add_parser('status', help="Get chargepoint status")
-    parser_status.add_argument('--chargepoint',
-                               dest='charge_point_id',
-                               metavar='ID',
-                               type=str,
-                               required=False,
-                               help="ChargePoint ID")
-    parser_status.add_argument('--connector',
-                               dest='connector_id',
-                               metavar='ID',
-                               type=int,
-                               required=False,
-                               help="Connector ID")
     parser_status.set_defaults(func=command_get_chargepoint_status)
+    add_arg_chargepoint(parser_status)
+    add_arg_connector(parser_status)
 
     parser_sessions = subparsers.add_parser('sessions', help="Get chargepoint sessions")
-    parser_sessions.add_argument('--chargepoint',
-                                 dest='charge_point_id',
-                                 metavar='ID',
-                                 type=str,
-                                 required=False,
-                                 help="ChargePoint ID")
-    parser_sessions.add_argument('--connector',
-                                 dest='connector_id',
-                                 metavar='ID',
-                                 type=int,
-                                 required=False,
-                                 help="Connector ID")
     parser_sessions.set_defaults(func=command_get_chargepoint_sessions)
+    add_arg_chargepoint(parser_sessions)
+    add_arg_connector(parser_sessions)
 
     parser_get = subparsers.add_parser('get', help="Get chargepoint settings")
-    parser_get.add_argument('--chargepoint',
-                            dest='charge_point_id',
-                            metavar='ID',
-                            type=str,
-                            required=False,
-                            help="ChargePoint ID")
-    parser_get.add_argument('--connector',
-                            dest='connector_id',
-                            metavar='ID',
-                            type=int,
-                            required=False,
-                            help="Connector ID")
     parser_get.set_defaults(func=command_get_chargepoint_settings)
+    add_arg_chargepoint(parser_get)
+    add_arg_connector(parser_get)
 
     parser_set = subparsers.add_parser('set', help="Change chargepoint settings")
-    parser_set.add_argument('--chargepoint',
-                            dest='charge_point_id',
-                            metavar='ID',
-                            type=str,
-                            required=False,
-                            help="ChargePoint ID")
-    parser_set.add_argument('--connector',
-                            dest='connector_id',
-                            metavar='ID',
-                            type=int,
-                            required=True,
-                            help="Connector ID")
+    parser_set.set_defaults(func=command_set_chargepoint_settings)
+    add_arg_chargepoint(parser_set)
+    add_arg_connector(parser_set, required=True)
     parser_set.add_argument('--enable',
                             dest='enable',
                             action='store_true',
@@ -164,7 +142,6 @@ async def main_loop() -> None:
                             type=int,
                             required=False,
                             help="Max current")
-    parser_set.set_defaults(func=command_set_chargepoint_settings)
 
     args = parser.parse_args()
 
