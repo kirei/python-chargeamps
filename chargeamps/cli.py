@@ -77,34 +77,21 @@ async def command_set_chargepoint_settings(client: ChargeAmpsClient, args: argpa
 
 
 def add_arg_chargepoint(parser, required=False):
-    parser.add_argument('--chargepoint',
-                        dest='charge_point_id',
-                        metavar='ID',
-                        type=str,
-                        required=required,
-                        help="ChargePoint ID")
+    parser.add_argument('--chargepoint', dest='charge_point_id', type=str, metavar='ID',                        
+                        required=required, help="ChargePoint ID")
 
 
 def add_arg_connector(parser, required=False):
-    parser.add_argument('--connector',
-                        dest='connector_id',
-                        metavar='ID',
-                        type=int,
-                        required=required,
-                        help="Connector ID")
+    parser.add_argument('--connector', dest='connector_id', type=int, metavar='ID',
+                        required=required, help="Connector ID")
 
 
 async def main_loop() -> None:
     """Main function"""
 
     parser = argparse.ArgumentParser(description='Chargeamps Client')
-    parser.add_argument('--config',
-                        metavar='config',
-                        required=True,
-                        help='Config file')
-    parser.add_argument('--debug',
-                        action='store_true',
-                        help="Enable debugging")
+    parser.add_argument('--config', metavar='config', required=True, help='Config file')
+    parser.add_argument('--debug', action='store_true', help="Enable debugging")
 
     subparsers = parser.add_subparsers(dest='command')
 
@@ -120,12 +107,8 @@ async def main_loop() -> None:
     parser_sessions.set_defaults(func=command_get_chargepoint_sessions)
     add_arg_chargepoint(parser_sessions)
     add_arg_connector(parser_sessions)
-    parser_sessions.add_argument('--session',
-                                 dest='session',
-                                 metavar='ID',
-                                 type=int,
-                                 required=False,
-                                 help="Charging session")
+    parser_sessions.add_argument('--session', dest='session', type=int, metavar='ID',
+                                 required=False, help="Charging session")
 
     parser_get = subparsers.add_parser('get', help="Get chargepoint settings")
     parser_get.set_defaults(func=command_get_chargepoint_settings)
@@ -136,20 +119,10 @@ async def main_loop() -> None:
     parser_set.set_defaults(func=command_set_chargepoint_settings)
     add_arg_chargepoint(parser_set)
     add_arg_connector(parser_set, required=True)
-    parser_set.add_argument('--enable',
-                            dest='enable',
-                            action='store_true',
-                            help="Enable connector")
-    parser_set.add_argument('--disable',
-                            dest='disable',
-                            action='store_true',
-                            help="Disable connector")
-    parser_set.add_argument('--current',
-                            dest='max_current',
-                            metavar='amps',
-                            type=int,
-                            required=False,
-                            help="Max current")
+    parser_set.add_argument('--enable', dest='enable', action='store_true', help="Enable connector")
+    parser_set.add_argument('--disable', dest='disable', action='store_true', help="Disable connector")
+    parser_set.add_argument('--current', dest='max_current', type=int, metavar='amps',
+                            required=False, help="Max current")
 
     args = parser.parse_args()
 
