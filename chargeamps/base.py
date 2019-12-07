@@ -63,7 +63,6 @@ class ChargePointConnectorSettings(object):
     max_current: int
     mode: str
 
-
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
 class ChargingSession(object):
@@ -72,5 +71,5 @@ class ChargingSession(object):
     connector_id: int
     session_type: str
     total_consumption_kwh: float
-    start_time: Optional[datetime] = datetime_field
-    end_time: Optional[datetime] = datetime_field
+    start_time: Optional[datetime] = datetime_field()
+    end_time: Optional[datetime] = datetime_field()
