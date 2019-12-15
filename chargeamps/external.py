@@ -3,7 +3,7 @@
 import asyncio
 import re
 import time
-from typing import List
+from typing import List, Optional
 
 import aiohttp
 import jwt
@@ -16,13 +16,13 @@ API_BASE_URL = "https://ca-externalapi.azurewebsites.net"
 
 class ChargeAmpsExternalClient(ChargeAmpsClient):
 
-    def __init__(self, email: str, password: str, api_key: str, api_base_url: str = API_BASE_URL):
+    def __init__(self, email: str, password: str, api_key: str, api_base_url: Optional[str] = None):
         self._email = email
         self._password = password
         self._api_key = api_key
         self._session = aiohttp.ClientSession(raise_for_status=True)
         self._headers = {}
-        self._base_url = api_base_url
+        self._base_url = api_base_url or API_BASE_URL
         self._ssl = False
         self._token = None
         self._token_expire = 0

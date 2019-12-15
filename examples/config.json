@@ -1,5 +1,6 @@
 {
 	"username": "user@example.com",
 	"password": "secret",
-	"api_key": "bWVrdG1pYXNkaWdvYXQ="
+	"api_key": "bWVrdG1pYXNkaWdvYXQ=",
+	"api_base_url": "https://ca-externalapi.azurewebsites.net"
 }

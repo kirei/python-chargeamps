@@ -134,7 +134,8 @@ async def main_loop() -> None:
 
     client = ChargeAmpsExternalClient(email=config['username'],
                                       password=config['password'],
-                                      api_key=config['api_key'])
+                                      api_key=config['api_key'],
+                                      api_base_url=config.get('api_base_url'))
 
     try:
         await args.func(client, args)
