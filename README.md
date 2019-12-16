@@ -7,4 +7,4 @@ The module is developed by [Kirei AB](https://www.kirei.se) and is not supported
 
 ## References
 
-- [Charge Amps External REST API](https://ca-externalapi.azurewebsites.net/swagger/index.html)
+- [Charge Amps External REST API](https://ca-externalapi.azurewebsites.net/swagger/)
