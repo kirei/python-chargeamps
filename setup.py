@@ -1,12 +1,22 @@
 #!/usr/bin/env python
 
+from os import path
+
 from setuptools import setup
+
 from chargeamps import __version__
+
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 
 setup(
     name='chargeamps',
     version=__version__,
     description='Charge-Amps API bindings for Python',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Jakob Schlyter',
     author_email='jakob@kirei.se',
     license='BSD',
