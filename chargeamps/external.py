@@ -1,7 +1,6 @@
 """Charge-Amps External API Client"""
 
-import asyncio
-import re
+import asyncio  # noqa
 import time
 from typing import List, Optional
 

@@ -77,7 +77,7 @@ async def command_set_chargepoint_settings(client: ChargeAmpsClient, args: argpa
 
 
 def add_arg_chargepoint(parser, required=False):
-    parser.add_argument('--chargepoint', dest='charge_point_id', type=str, metavar='ID',                        
+    parser.add_argument('--chargepoint', dest='charge_point_id', type=str, metavar='ID',
                         required=required, help="ChargePoint ID")
 
 

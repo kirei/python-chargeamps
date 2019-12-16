@@ -18,7 +18,7 @@ def datetime_decoder(x: Optional[str]) -> Optional[datetime]:
 
 
 def datetime_field():
-     return field(default=None,
-                  metadata=config(encoder=datetime_encoder,
-                                   decoder=datetime_decoder,
-                                   mm_field=fields.DateTime(format='iso')))
+    return field(default=None,
+                 metadata=config(encoder=datetime_encoder,
+                                 decoder=datetime_decoder,
+                                 mm_field=fields.DateTime(format='iso')))

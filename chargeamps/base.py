@@ -63,6 +63,7 @@ class ChargePointConnectorSettings(object):
     max_current: int
     mode: str
 
+
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
 class ChargingSession(object):
