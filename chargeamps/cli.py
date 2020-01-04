@@ -50,6 +50,7 @@ async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argpa
                 res.append(session.to_dict())
         print(json.dumps(res, indent=4))
 
+
 async def command_get_chargepoint_settings(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
     if args.connector_id:
