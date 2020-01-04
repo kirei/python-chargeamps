@@ -44,10 +44,11 @@ async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argpa
     if args.session:
         session = await client.get_chargingsession(charge_point_id, args.session)
     else:
+        res = []
         for session in await client.get_all_chargingsessions(charge_point_id):
             if args.connector_id is None or args.connector_id == session.connector_id:
-                print(json.dumps(session.to_dict(), indent=4))
-
+                res.append(session.to_dict())
+        print(json.dumps(res, indent=4))
 
 async def command_get_chargepoint_settings(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
