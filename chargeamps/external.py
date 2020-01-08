@@ -7,8 +7,8 @@ from typing import List, Optional
 import aiohttp
 import jwt
 
-from .base import (ChargeAmpsClient, ChargePoint, ChargePointSettings, ChargePointConnectorSettings,
-                   ChargePointStatus, ChargingSession)
+from .base import (ChargeAmpsClient, ChargePoint, ChargePointConnectorSettings,
+                   ChargePointSettings, ChargePointStatus, ChargingSession)
 
 API_BASE_URL = "https://ca-externalapi.azurewebsites.net"
 
