@@ -57,6 +57,14 @@ class ChargePointStatus(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=False)
+class ChargePointSettings(object):
+    id: str
+    dimmer: str
+    down_light: bool
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=False)
 class ChargePointConnectorSettings(object):
     charge_point_id: str
     connector_id: int
