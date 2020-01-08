@@ -7,7 +7,7 @@ from typing import List, Optional
 import aiohttp
 import jwt
 
-from .base import (ChargeAmpsClient, ChargePoint, ChargePointConnectorSettings,
+from .base import (ChargeAmpsClient, ChargePoint, ChargePointSettings, ChargePointConnectorSettings,
                    ChargePointStatus, ChargingSession)
 
 API_BASE_URL = "https://ca-externalapi.azurewebsites.net"
@@ -88,6 +88,19 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         request_uri = f'/api/v3/chargepoints/{charge_point_id}/status'
         response = await self._get(request_uri)
         return ChargePointStatus.from_dict(await response.json())
+
+    async def get_chargepoint_settings(self, charge_point_id: str) -> ChargePointSettings:
+        """Get chargepoint settings"""
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/settings'
+        response = await self._get(request_uri)
+        return ChargePointSettings.from_dict(await response.json())
+
+    async def set_chargepoint_settings(self, settings: ChargePointSettings) -> None:
+        """Set chargepoint settings"""
+        payload = settings.to_dict()
+        charge_point_id = settings.id
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/settings'
+        await self._put(request_uri, json=payload)
 
     async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: int) -> ChargePointConnectorSettings:
         """Get all owned chargepoints"""
