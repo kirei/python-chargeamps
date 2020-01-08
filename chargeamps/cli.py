@@ -65,6 +65,8 @@ async def command_set_chargepoint_settings(client: ChargeAmpsClient, args: argpa
     if args.downlight is not None:
         settings.down_light = args.downlight
     await client.set_chargepoint_settings(settings)
+    settings = await client.get_chargepoint_settings(charge_point_id)
+    print(json.dumps(settings.to_dict(), indent=4))
 
 
 async def command_get_connector_settings(client: ChargeAmpsClient, args: argparse.Namespace):
@@ -92,6 +94,8 @@ async def command_set_connector_settings(client: ChargeAmpsClient, args: argpars
     elif args.enabled is False:
         settings.mode = "Off"
     await client.set_chargepoint_connector_settings(settings)
+    settings = await client.get_chargepoint_connector_settings(charge_point_id, connector_id)
+    print(json.dumps(settings.to_dict(), indent=4))
 
 
 def add_arg_chargepoint(parser, required=False):
