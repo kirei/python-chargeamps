@@ -53,6 +53,22 @@ async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argpa
 
 async def command_get_chargepoint_settings(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
+    settings = await client.get_chargepoint_settings(charge_point_id)
+    print(json.dumps(settings.to_dict(), indent=4))
+
+
+async def command_set_chargepoint_settings(client: ChargeAmpsClient, args: argparse.Namespace):
+    charge_point_id = await get_chargepoint_id(client, args)
+    settings = await client.get_chargepoint_settings(charge_point_id)
+    if args.dimmer:
+        settings.dimmer = args.dimmer.capitalize()
+    if args.downlight is not None:
+        settings.down_light = args.downlight
+    await client.set_chargepoint_settings(settings)
+
+
+async def command_get_connector_settings(client: ChargeAmpsClient, args: argparse.Namespace):
+    charge_point_id = await get_chargepoint_id(client, args)
     if args.connector_id:
         connector_ids = [args.connector_id]
     else:
@@ -65,15 +81,15 @@ async def command_get_chargepoint_settings(client: ChargeAmpsClient, args: argpa
     print(json.dumps(res, indent=4))
 
 
-async def command_set_chargepoint_settings(client: ChargeAmpsClient, args: argparse.Namespace):
+async def command_set_connector_settings(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     settings = await client.get_chargepoint_connector_settings(charge_point_id, connector_id)
     if args.max_current:
         settings.max_current = args.max_current
-    if args.enable:
+    if args.enabled is True:
         settings.mode = "On"
-    elif args.disable:
+    elif args.enabled is False:
         settings.mode = "Off"
     await client.set_chargepoint_connector_settings(settings)
 
@@ -112,19 +128,32 @@ async def main_loop() -> None:
     parser_sessions.add_argument('--session', dest='session', type=int, metavar='ID',
                                  required=False, help="Charging session")
 
-    parser_get = subparsers.add_parser('get', help="Get chargepoint settings")
-    parser_get.set_defaults(func=command_get_chargepoint_settings)
-    add_arg_chargepoint(parser_get)
-    add_arg_connector(parser_get)
+    parser_get_chargepoint = subparsers.add_parser('get-chargepoint', help="Get chargepoint settings")
+    parser_get_chargepoint.set_defaults(func=command_get_chargepoint_settings)
+    add_arg_chargepoint(parser_get_chargepoint)
 
-    parser_set = subparsers.add_parser('set', help="Change chargepoint settings")
-    parser_set.set_defaults(func=command_set_chargepoint_settings)
-    add_arg_chargepoint(parser_set)
-    add_arg_connector(parser_set, required=True)
-    parser_set.add_argument('--enable', dest='enable', action='store_true', help="Enable connector")
-    parser_set.add_argument('--disable', dest='disable', action='store_true', help="Disable connector")
-    parser_set.add_argument('--current', dest='max_current', type=int, metavar='amps',
-                            required=False, help="Max current")
+    parser_set_chargepoint = subparsers.add_parser('set-chargepoint', help="Set chargepoint settings")
+    parser_set_chargepoint.set_defaults(func=command_set_chargepoint_settings)
+    add_arg_chargepoint(parser_set_chargepoint)
+    parser_set_chargepoint.add_argument('--dimmer', dest='dimmer', type=str, metavar='',
+                                        choices=['off', 'low', 'medium', 'high'],
+                                        required=False, help="Dimmer")
+    parser_set_chargepoint.add_argument('--downlight', dest='downlight', action='store_true', help="Enable downlight")
+    parser_set_chargepoint.add_argument('--no-downlight', dest='downlight', action='store_false', help="Disable downlight")
+
+    parser_get_connector = subparsers.add_parser('get-connector', aliases=['get'], help="Get connector settings")
+    parser_get_connector.set_defaults(func=command_get_connector_settings)
+    add_arg_chargepoint(parser_get_connector)
+    add_arg_connector(parser_get_connector)
+
+    parser_set_connector = subparsers.add_parser('set-connector', aliases=['set'], help="Change connector settings")
+    parser_set_connector.set_defaults(func=command_set_connector_settings)
+    add_arg_chargepoint(parser_set_connector)
+    add_arg_connector(parser_set_connector, required=True)
+    parser_set_connector.add_argument('--enable', dest='enabled', action='store_true', help="Enable connector")
+    parser_set_connector.add_argument('--disable', dest='enabled', action='store_false', help="Disable connector")
+    parser_set_connector.add_argument('--current', dest='max_current', type=int, metavar='amps',
+                                      required=False, help="Max current")
 
     args = parser.parse_args()
 
