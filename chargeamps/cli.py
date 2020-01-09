@@ -51,7 +51,7 @@ async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argpa
         for session in await client.get_all_chargingsessions(charge_point_id, start_time, end_time):
             if args.connector_id is None or args.connector_id == session.connector_id:
                 res.append(session.to_dict())
-        res = sorted(res, key = lambda i: i['id']) 
+        res = sorted(res, key=lambda i: i['id'])
         print(json.dumps(res, indent=4))
 
 
