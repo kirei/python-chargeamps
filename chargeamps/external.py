@@ -2,6 +2,8 @@
 
 import asyncio  # noqa
 import time
+import urllib.parse
+from datetime import datetime
 from typing import List, Optional
 
 import aiohttp
@@ -68,9 +70,16 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             res.append(ChargePoint.from_dict(chargepoint))
         return res
 
-    async def get_all_chargingsessions(self, charge_point_id: str) -> List[ChargingSession]:
+    async def get_all_chargingsessions(self, charge_point_id: str,
+                                       start_time: Optional[datetime] = None,
+                                       end_time: Optional[datetime] = None) -> List[ChargingSession]:
         """Get all charging sessions"""
-        request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions'
+        query_params = {}
+        if start_time:
+            query_params['startTime'] = start_time.isoformat()
+        if end_time:
+            query_params['endTime'] = end_time.isoformat()
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions?{urllib.parse.urlencode(query_params)}'
         response = await self._get(request_uri)
         res = []
         for session in await response.json():
