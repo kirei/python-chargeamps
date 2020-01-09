@@ -7,6 +7,7 @@ import logging
 import sys
 
 from aiohttp.client_exceptions import ClientResponseError
+from isodate import parse_datetime
 
 from .base import ChargeAmpsClient
 from .external import ChargeAmpsExternalClient
@@ -45,7 +46,9 @@ async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argpa
         session = await client.get_chargingsession(charge_point_id, args.session)
     else:
         res = []
-        for session in await client.get_all_chargingsessions(charge_point_id):
+        start_time = parse_datetime(args.start_time) if args.start_time else None
+        end_time = parse_datetime(args.end_time) if args.end_time else None
+        for session in await client.get_all_chargingsessions(charge_point_id, start_time, end_time):
             if args.connector_id is None or args.connector_id == session.connector_id:
                 res.append(session.to_dict())
         print(json.dumps(res, indent=4))
@@ -131,6 +134,12 @@ async def main_loop() -> None:
     add_arg_connector(parser_sessions)
     parser_sessions.add_argument('--session', dest='session', type=int, metavar='ID',
                                  required=False, help="Charging session")
+    parser_sessions.add_argument('--start', dest='start_time', type=str,
+                                 metavar='timestamp',
+                                 help="Include sessions from timestamp")
+    parser_sessions.add_argument('--end', dest='end_time', type=str,
+                                 metavar='timestamp',
+                                 help="Include sessions until timestamp")
 
     parser_get_chargepoint = subparsers.add_parser('get-chargepoint', help="Get chargepoint settings")
     parser_get_chargepoint.set_defaults(func=command_get_chargepoint_settings)
