@@ -2,7 +2,6 @@
 
 import asyncio  # noqa
 import time
-import urllib.parse
 from datetime import datetime
 from typing import List, Optional
 
@@ -79,8 +78,8 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             query_params['startTime'] = start_time.isoformat()
         if end_time:
             query_params['endTime'] = end_time.isoformat()
-        request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions?{urllib.parse.urlencode(query_params)}'
-        response = await self._get(request_uri)
+        request_uri = f'/api/v3/chargepoints/{charge_point_id}/chargingsessions'
+        response = await self._get(request_uri, params=query_params)
         res = []
         for session in await response.json():
             res.append(ChargingSession.from_dict(session))
