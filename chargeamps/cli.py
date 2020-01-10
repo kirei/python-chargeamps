@@ -5,9 +5,10 @@ import asyncio
 import json
 import logging
 import sys
+from datetime import datetime, timedelta
 
 from aiohttp.client_exceptions import ClientResponseError
-from isodate import parse_datetime
+from isodate import parse_datetime, parse_duration
 
 from .base import ChargeAmpsClient
 from .external import ChargeAmpsExternalClient
@@ -45,9 +46,13 @@ async def command_get_chargepoint_sessions(client: ChargeAmpsClient, args: argpa
     if args.session:
         session = await client.get_chargingsession(charge_point_id, args.session)
     else:
+        if args.duration is not None:
+            start_time = datetime.utcnow() - parse_duration(args.duration)
+            end_time = None
+        else:
+            start_time = parse_datetime(args.start_time) if args.start_time else None
+            end_time = parse_datetime(args.end_time) if args.end_time else None
         res = []
-        start_time = parse_datetime(args.start_time) if args.start_time else None
-        end_time = parse_datetime(args.end_time) if args.end_time else None
         for session in await client.get_all_chargingsessions(charge_point_id, start_time, end_time):
             if args.connector_id is None or args.connector_id == session.connector_id:
                 res.append(session.to_dict())
@@ -141,6 +146,9 @@ async def main_loop() -> None:
     parser_sessions.add_argument('--end', dest='end_time', type=str,
                                  metavar='timestamp',
                                  help="Include sessions until timestamp")
+    parser_sessions.add_argument('--duration', dest='duration', type=str,
+                                 metavar='duration',
+                                 help="Include sessions made during a ISO8601 duration")
 
     parser_get_chargepoint = subparsers.add_parser('get-chargepoint', help="Get chargepoint settings")
     parser_get_chargepoint.set_defaults(func=command_get_chargepoint_settings)
