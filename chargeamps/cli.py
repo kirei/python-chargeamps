@@ -5,7 +5,7 @@ import asyncio
 import json
 import logging
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from aiohttp.client_exceptions import ClientResponseError
 from isodate import parse_datetime, parse_duration
