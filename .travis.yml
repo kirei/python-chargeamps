@@ -4,10 +4,19 @@ python:
   - "3.7"
   - "3.8"
 install:
- - pip install pylama
- - pip install -e .
+  - pip install pylama
+  - pip install -e .
 script:
- - python -m compileall chargeamps
- - pylama chargeamps
+  - python -m compileall chargeamps
+  - pylama chargeamps
 notifications:
   email: false
+deploy:
+  provider: pypi
+  on:
+    tags: true
+  distributions: "bdist_wheel"
+  skip_existing: true
+  user: "__token__"
+  password:
+    secure: xb864889R6T0fCXsRtV//BW6ZBpQvlxKUgTe4SXuSEti1C947CLgHhDuitNswtvadYCBiNWvcntVEDbYi62LdSV6e1dHgxOSk65zvqEsnOC5fkWuRfxaL1yKp8tA1K5Zk3Udea8u+bpLbwh8RRem+bLq87HjynKbHCTmu+cGkFqDN89MbKnwKxgeJff+HAKKOgQ8wg7N+7PWTxXnmY/tAN+19np/qj9gCxRQnwmQzOepS+qE6fhu0GIYTSOZfxraGqoqk4x8pU8yW0NpH3vNMCXfBf2XgBfWxVVLfLwfVEppjulImZmvCTjxFV6gthg+msmFjpLq1eGxmzDDXt3TjQ+iVwPMlBlz+EJ9VJdvb2d11Gny8itgtAD7Ltfbz1NxRwOoNJN96SEPD8ovtnpe9CxflytBIlS2/aECLrB0eyYBBC0dNnPS+IiEKy0uPWYcUfhz0uUSIaV8025zvifKHLppUSUZKCK9ut6xoyETlrxyCsRl/vQIVh7jKs4Nln/qh7S9LxfkaVDZio7GILocEHExDufZsW8QmCJVfAR9q5oLO4uJcWrt5d8sLnAvZLHhMsjoLZt3t/kzy1Vp+wXQaIXfBbHKbBbfv20dYVNOoM6kiVISpEYIysnvcBjZIr0RVZwpchAwfQl1UaAavUKdLtgp/CgK81dUDzlaBtE1x2s=
