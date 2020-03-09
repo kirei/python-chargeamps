@@ -68,7 +68,7 @@ class ChargePointSettings(object):
 class ChargePointConnectorSettings(object):
     charge_point_id: str
     connector_id: int
-    max_current: int
+    max_current: Optional[float]
     mode: str
 
 
