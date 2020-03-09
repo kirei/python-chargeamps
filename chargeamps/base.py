@@ -70,6 +70,8 @@ class ChargePointConnectorSettings(object):
     connector_id: int
     max_current: int
     mode: str
+    rfid_lock: bool
+    cable_lock: bool
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
