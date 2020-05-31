@@ -1,22 +1,22 @@
 language: python
 python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
+- '3.6'
+- '3.7'
+- '3.8'
 install:
-  - pip install pylama
-  - pip install -e .
+- pip install pylama
+- pip install -e .
 script:
-  - python -m compileall chargeamps
-  - pylama chargeamps
+- python -m compileall chargeamps
+- pylama chargeamps
 notifications:
   email: false
 deploy:
   provider: pypi
   on:
     tags: true
-  distributions: "bdist_wheel"
+  distributions: bdist_wheel
   skip_existing: true
-  user: "__token__"
+  username: __token__
   password:
-    secure: "N/CKH7oypNbgRcXfB+2BT7qVsGhBAe9/uLyj7aNNiK9Zm7ZGZC59sn7rvWkL8SRGEtP3ggrEk/YqqiIVk7iuKdhImeGdNlJ+eiSF4tQ8Hk1gnVIqj26MDedc8HtmSzkMPScarYlxu3IkMqb8H0lTxYl1iJUyyLZGnmOQ1OF519cRQ3BCdUTiMzoG/yycas5isDIvGJ5zHprbbvgqZYaQ/yPqJomT+lNEyAEL7Ks854L+M90PFoC35r+61xOlBNbLSO2CHw/WkkCn3JUHVxwkG7NX2ZV4nAwZIsSCzrigpGRAnZow9znty2I1TxmZVN+akcFmpM+4IaFk9R0k73LgrMOEARHU9bDjt6ct+8a99yuuQI7NND3OvPIGk81Zd+nihXn0SqgZskPk3OKBRw0o/qYHcWJZhGpTBtTRCP96YFYMW/xoHykWA6feQ3bnRWn5KFdnxxgaoe9R22+EHI7JiwjuXZYOVuVebsE9xFHS0CRNBwHuUnaFQUdCMIlRXOp7+9rgXwmTNjCPGhuowr+6VxQdoYB9Gg05yx5/G5c/rKpu/ER3Bns0P10UHLXnYS3ZFyQvMVdBjqx3iONjTu5P0rq9mmt4njhBUDGSNGisVmDnSuWS2RvugSGTV9dmnE6A67Fv4EmLUytVwoFArFhv0dTOCGx8Dj+i2LcQKJ8x7xQ="
+    secure: ipf0rva6JEbQB8m7mxOI7UIAQ/lCnEWFkH2gOa/58Vrua5MI7I4yYX++tJ9crlcf79bvgkMAJFsQZU8APggt6SOZ60ZQJLkPRHpy3jScsSTtHUGm40NehXT21capVSDIQhNzAD5ur0C0HzLWGxml7KwYg84PUJsQ904vUNsUocBAfMNzQsb08vjrwf2xtFrrrtWsOlhUQ7uKRj3Xk3wIv07YufpPtv/4dDnlfBmQNVbcxPL7SGOFQ3KElaiCxVLjkLFt4Zxh1cvMEJWrhbVKgAIJHaNVZCK3Wb6vd1sByZ2wYZAtMWgoT8h7H5wamaqqNIncRfoyG/ARQI2dfaVx7nFkXyp9l2QNOi2t9lfJTji1pb6yb9MOOt6CuPGfdshM91mU92U5adFPES54DZkFcWBzFdjvIiJTsN8NdCR69FZPFRNbbvpmVORXY3mr9D/LlFZRNd+/x6JLdxlu+A8Qkp5TcP5937/pltR1PXPWJMeCWwKpC9aSqY43Kc7E6bU6D8nlHvWRqMxcBLqbxBhFo4tbOh3theJf0taMGn2wopOQfTjB9CwYCfLT4nd5CCi0lFcRPkMFj6ByMbKreAhvE8y1wdk52XYVjI4tjjni83V5BExFXVXdrjyhQCNpwX1TukbTu/X42Tq6DJlo5CtK1MseBpZHnYd9MW7AdRTQcQ4=
