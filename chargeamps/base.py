@@ -69,6 +69,8 @@ class ChargePointConnectorSettings(object):
     charge_point_id: str
     connector_id: int
     mode: str
+    rfid_lock: bool
+    cable_lock: bool
     max_current: Optional[float] = None
 
 

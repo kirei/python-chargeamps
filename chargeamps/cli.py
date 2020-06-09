@@ -114,12 +114,14 @@ async def command_set_connector_settings(
     settings = await client.get_chargepoint_connector_settings(
         charge_point_id, connector_id
     )
-    if args.max_current:
+    if args.max_current is not None:
         settings.max_current = args.max_current
-    if args.enabled is True:
-        settings.mode = "On"
-    elif args.enabled is False:
-        settings.mode = "Off"
+    if args.enabled is not None:
+        settings.mode = "On" if args.enabled else "Off"
+    if args.rfid_lock is not None:
+        settings.rfid_lock = args.rfid_lock
+    if args.cable_lock is not None:
+        settings.cable_lock = args.cable_lock
     await client.set_chargepoint_connector_settings(settings)
     settings = await client.get_chargepoint_connector_settings(
         charge_point_id, connector_id
@@ -248,6 +250,24 @@ async def main_loop() -> None:
     )
     parser_set_connector.add_argument(
         "--disable", dest="enabled", action="store_false", help="Disable connector"
+    )
+    parser_set_connector.add_argument(
+        "--rfid-lock", dest="rfid_lock", action="store_true", help="Enable RFID lock"
+    )
+    parser_set_connector.add_argument(
+        "--rfid-unlock",
+        dest="rfid_lock",
+        action="store_false",
+        help="Disable RFID lock",
+    )
+    parser_set_connector.add_argument(
+        "--cable-lock", dest="cable_lock", action="store_true", help="Enable cable lock"
+    )
+    parser_set_connector.add_argument(
+        "--cable-unlock",
+        dest="cable_lock",
+        action="store_false",
+        help="Disable cable lock",
     )
     parser_set_connector.add_argument(
         "--current",
