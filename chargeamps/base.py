@@ -37,11 +37,20 @@ class ChargePoint(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
+class ChargePointMeasurement(object):
+    phase: str
+    current: float
+    voltage: float
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True)
 class ChargePointConnectorStatus(object):
     charge_point_id: str
     connector_id: int
     total_consumption_kwh: float
     status: str
+    measurements: Optional[List[ChargePointMeasurement]]
     start_time: Optional[datetime] = datetime_field()
     end_time: Optional[datetime] = datetime_field()
     session_id: Optional[str] = None
