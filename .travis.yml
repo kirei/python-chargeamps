@@ -5,11 +5,13 @@ python:
 - '3.8'
 - '3.9-dev'
 install:
-- pip install pylama
+- pip install pylama black isort
 - pip install -e .
 script:
 - python -m compileall chargeamps
 - pylama chargeamps
+- isort --check --recursive chargeamps
+- black --check chargeamps
 notifications:
   email: false
 deploy:
