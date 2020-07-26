@@ -1,14 +1,16 @@
 language: python
 python:
-- '3.6'
-- '3.7'
-- '3.8'
+  - '3.6'
+  - '3.7'
+  - '3.8'
 install:
-- pip install pylama
-- pip install -e .
+  - pip install pylama
+  - pip install -e .
 script:
-- python -m compileall chargeamps
-- pylama chargeamps
+  - python -m compileall chargeamps
+  - pylama chargeamps
+  - isort --check chargeamps
+  - black --check chargeamps
 notifications:
   email: false
 deploy:
