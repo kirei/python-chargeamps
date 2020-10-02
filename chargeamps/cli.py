@@ -10,6 +10,7 @@ from datetime import datetime
 from aiohttp.client_exceptions import ClientResponseError
 from isodate import parse_datetime, parse_duration
 
+from . import __version__
 from .base import ChargeAmpsClient
 from .external import ChargeAmpsExternalClient
 
@@ -154,7 +155,7 @@ def add_arg_connector(parser, required=False):
 async def main_loop() -> None:
     """Main function"""
 
-    parser = argparse.ArgumentParser(description="Chargeamps Client")
+    parser = argparse.ArgumentParser(description=f"Chargeamps Client v{__version__}")
     parser.add_argument("--config", metavar="config", required=True, help="Config file")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
 
