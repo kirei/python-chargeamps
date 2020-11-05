@@ -1,1 +1,3 @@
-__version__ = "1.4.0"
+import pkg_resources
+
+__version__ = pkg_resources.get_distribution("chargeamps").version
