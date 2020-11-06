@@ -4,7 +4,7 @@ python:
   - '3.8'
   - '3.9'
 install:
-  - pip install pylama
+  - pip install pylama isort black
   - pip install -e .
 script:
   - python -m compileall chargeamps
