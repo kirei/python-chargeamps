@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.4.1 (2020-11-05)
+## 1.4.1 (2020-11-06)
 
 - Add version number
 
