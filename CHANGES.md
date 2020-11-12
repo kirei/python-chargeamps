@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.4.2 (develop)
+
+- Use config file from environment variable `CHARGEAMPS_CONFIG` if set
+
 ## 1.4.1 (2020-11-06)
 
 - Add version number
