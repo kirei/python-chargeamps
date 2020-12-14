@@ -34,7 +34,7 @@ setup(
     install_requires=[
         'aiohttp',
         'asyncio',
-        'dataclasses',
+        'dataclasses;python_version<"3.7"',
         'dataclasses-json',
         'isodate',
         'marshmallow',
