@@ -4,6 +4,7 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 import sys
 from datetime import datetime
 
@@ -16,6 +17,7 @@ from .external import ChargeAmpsExternalClient
 
 logger = logging.getLogger(__name__)
 
+CONFIG_ENV = "CHARGEAMPS_CONFIG"
 
 async def get_chargepoint_id(client: ChargeAmpsClient, args: argparse.Namespace) -> str:
     if args.charge_point_id:
@@ -156,7 +158,12 @@ async def main_loop() -> None:
     """Main function"""
 
     parser = argparse.ArgumentParser(description=f"Chargeamps Client v{__version__}")
-    parser.add_argument("--config", metavar="config", required=True, help="Config file")
+    parser.add_argument(
+        "--config",
+        metavar="config",
+        default=os.environ.get(CONFIG_ENV),
+        help=f"Config file (or set via env {CONFIG_ENV})",
+    )
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
 
     subparsers = parser.add_subparsers(dest="command")
@@ -283,6 +290,10 @@ async def main_loop() -> None:
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
+
+    if args.config is None:
+        parser.print_help()
+        sys.exit(-1)
 
     with open(args.config) as config_file:
         config = json.load(config_file)
