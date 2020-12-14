@@ -33,7 +33,7 @@ setup(
     packages=['chargeamps'],
     install_requires=[
         'aiohttp',
-        'dataclasses',
+        'dataclasses;python_version<"3.7"',
         'dataclasses-json',
         'isodate',
         'marshmallow',
