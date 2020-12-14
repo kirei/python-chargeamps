@@ -33,7 +33,6 @@ setup(
     packages=['chargeamps'],
     install_requires=[
         'aiohttp',
-        'asyncio',
         'dataclasses',
         'dataclasses-json',
         'isodate',
