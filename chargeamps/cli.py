@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 CONFIG_ENV = "CHARGEAMPS_CONFIG"
 
+
 async def get_chargepoint_id(client: ChargeAmpsClient, args: argparse.Namespace) -> str:
     if args.charge_point_id:
         return args.charge_point_id
