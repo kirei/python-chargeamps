@@ -23,15 +23,16 @@ jobs:
       with:
         path: .venv
         key: ${{ runner.os }}-venv-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-    - name: Install dependencies
+    - name: Install and set up Poetry
       run: |
-        pip install pylama isort black
-        pip install -e .
+        pip install poetry
+        poetry config virtualenvs.in-project true
+    - name: Install dependencies
+      run: poetry install
     - name: Lint
       run: |
-        python -m compileall chargeamps
-        pylama chargeamps
+        poetry run pylama chargeamps
     - name: Check formatting
       run: |
-        isort --check chargeamps
-        black --check chargeamps
+        poetry run isort --check chargeamps
+        poetry run black --check chargeamps
