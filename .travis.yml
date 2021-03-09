@@ -18,12 +18,10 @@ before_deploy:
   - pip install --upgrade pip
   - pip install poetry
   - poetry config pypi-token.pypi $PYPI_PASSWORD
+  - poetry build
 deploy:
-  provider: pypi
+  provider: script
+  script: poetry publish
+  skip_cleanup: true
   on:
     tags: true
-  distributions: bdist_wheel
-  skip_existing: true
-  username: __token__
-  password:
-    secure: ipf0rva6JEbQB8m7mxOI7UIAQ/lCnEWFkH2gOa/58Vrua5MI7I4yYX++tJ9crlcf79bvgkMAJFsQZU8APggt6SOZ60ZQJLkPRHpy3jScsSTtHUGm40NehXT21capVSDIQhNzAD5ur0C0HzLWGxml7KwYg84PUJsQ904vUNsUocBAfMNzQsb08vjrwf2xtFrrrtWsOlhUQ7uKRj3Xk3wIv07YufpPtv/4dDnlfBmQNVbcxPL7SGOFQ3KElaiCxVLjkLFt4Zxh1cvMEJWrhbVKgAIJHaNVZCK3Wb6vd1sByZ2wYZAtMWgoT8h7H5wamaqqNIncRfoyG/ARQI2dfaVx7nFkXyp9l2QNOi2t9lfJTji1pb6yb9MOOt6CuPGfdshM91mU92U5adFPES54DZkFcWBzFdjvIiJTsN8NdCR69FZPFRNbbvpmVORXY3mr9D/LlFZRNd+/x6JLdxlu+A8Qkp5TcP5937/pltR1PXPWJMeCWwKpC9aSqY43Kc7E6bU6D8nlHvWRqMxcBLqbxBhFo4tbOh3theJf0taMGn2wopOQfTjB9CwYCfLT4nd5CCi0lFcRPkMFj6ByMbKreAhvE8y1wdk52XYVjI4tjjni83V5BExFXVXdrjyhQCNpwX1TukbTu/X42Tq6DJlo5CtK1MseBpZHnYd9MW7AdRTQcQ4=
