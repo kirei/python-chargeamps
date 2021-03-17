@@ -10,6 +10,7 @@ readme = "README.md"
 description = "Charge-Amps API bindings for Python"
 authors = ["Jakob Schlyter <jakob@kirei.se>"]
 license = "BSD-2-Clause"
+repository = "https://github.com/kirei/python-chargeamps"
 packages = [
     { include = "chargeamps" }
 ]
