@@ -32,7 +32,6 @@ jobs:
       - name: Lint
         run: |
           poetry run pylama chargeamps
-      - name: Check formatting
+      - name: Pytest
         run: |
-          poetry run isort --check chargeamps
-          poetry run black --check chargeamps
+          poetry run pytest --isort --black
