@@ -12,4 +12,4 @@ You need an API key to use the Charge Amps external API. Contact [Charge Amps Su
 
 ## References
 
-- [Charge Amps External REST API](https://ca-externalapi.azurewebsites.net/swagger/)
+- [Charge Amps External REST API](https://eapi.charge.space/swagger/)
