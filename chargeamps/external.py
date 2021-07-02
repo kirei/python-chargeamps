@@ -4,7 +4,7 @@ import asyncio  # noqa
 import time
 from datetime import datetime
 from typing import List, Optional
-
+from urllib.parse import urljoin
 import aiohttp
 import jwt
 
@@ -17,7 +17,7 @@ from .base import (
     ChargingSession,
 )
 
-API_BASE_URL = "https://ca-externalapi.azurewebsites.net"
+API_BASE_URL = "https://eapi.charge.space"
 
 
 class ChargeAmpsExternalClient(ChargeAmpsClient):
@@ -44,7 +44,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
     async def _ensure_token(self):
         if self._token_expire < time.time():
             response = await self._session.post(
-                f"{self._base_url}/api/v3/auth/login",
+                urljoin(self._base_url, "/api/v3/auth/login"),
                 ssl=self._ssl,
                 headers={"apiKey": self._api_key},
                 json={"email": self._email, "password": self._password},
@@ -58,21 +58,21 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
         return await self._session.post(
-            f"{self._base_url}/{path}", ssl=self._ssl, headers=headers, **kwargs
+            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
         )
 
     async def _get(self, path, **kwargs):
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
         return await self._session.get(
-            f"{self._base_url}/{path}", ssl=self._ssl, headers=headers, **kwargs
+            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
         )
 
     async def _put(self, path, **kwargs):
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
         return await self._session.put(
-            f"{self._base_url}/{path}", ssl=self._ssl, headers=headers, **kwargs
+            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
         )
 
     async def get_chargepoints(self) -> List[ChargePoint]:
