@@ -5,7 +5,7 @@ profile = "black"
 
 [tool.poetry]
 name = "chargeamps"
-version = "1.4.4"
+version = "1.4.3"
 readme = "README.md"
 description = "Charge-Amps API bindings for Python"
 authors = ["Jakob Schlyter <jakob@kirei.se>"]
