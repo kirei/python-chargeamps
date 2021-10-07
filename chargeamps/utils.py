@@ -4,8 +4,8 @@ from dataclasses import field
 from datetime import datetime
 from typing import Optional
 
+from ciso8601 import parse_datetime
 from dataclasses_json import config
-from isodate import parse_datetime
 from marshmallow import fields
 
 

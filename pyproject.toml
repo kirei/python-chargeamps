@@ -33,6 +33,7 @@ dataclasses-json = "^0.5.2"
 isodate = "^0.6.0"
 marshmallow = "^3.9.0"
 PyJWT = "^2.1.0"
+ciso8601 = "^2.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

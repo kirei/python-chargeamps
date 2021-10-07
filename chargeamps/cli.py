@@ -9,7 +9,8 @@ import sys
 from datetime import datetime
 
 from aiohttp.client_exceptions import ClientResponseError
-from isodate import parse_datetime, parse_duration
+from ciso8601 import parse_datetime
+from isodate import parse_duration
 
 from . import __version__
 from .base import ChargeAmpsClient
