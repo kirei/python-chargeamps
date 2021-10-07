@@ -26,6 +26,18 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "arrow"
+version = "1.2.0"
+description = "Better dates & times for Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+python-dateutil = ">=2.7.0"
+typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
+
+[[package]]
 name = "async-timeout"
 version = "3.0.1"
 description = "Timeout context manager for asyncio programs"
@@ -171,15 +183,15 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "isodate"
-version = "0.6.0"
-description = "An ISO 8601 date/time/duration parser and formatter"
+name = "isoduration"
+version = "20.11.0"
+description = "Operations with ISO 8601 durations"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [package.dependencies]
-six = "*"
+arrow = ">=0.15.0"
 
 [[package]]
 name = "isort"
@@ -418,6 +430,17 @@ isort = ">=4.0"
 tests = ["mock"]
 
 [[package]]
+name = "python-dateutil"
+version = "2.8.2"
+description = "Extensions to the standard Python datetime module"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
 name = "regex"
 version = "2021.9.30"
 description = "Alternative regular expression module, to replace re."
@@ -505,7 +528,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c6965f0860758702799899c58dad3532e04c25aa2a891b76b9aba520e3445b28"
+content-hash = "f850c82013063129771833e9d545c49be2dd10fbae563bb1dea1de604c890401"
 
 [metadata.files]
 aiohttp = [
@@ -550,6 +573,10 @@ aiohttp = [
 appdirs = [
     {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
     {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
+]
+arrow = [
+    {file = "arrow-1.2.0-py3-none-any.whl", hash = "sha256:8fb7d9d3d4bf90e49e734c22fa077bdd0964135c4b8120de2510575a8d1f620c"},
+    {file = "arrow-1.2.0.tar.gz", hash = "sha256:16fc29bbd9e425e3eb0fef3018297910a0f4568f21116fc31771e2760a50e074"},
 ]
 async-timeout = [
     {file = "async-timeout-3.0.1.tar.gz", hash = "sha256:0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f"},
@@ -603,9 +630,9 @@ iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
-isodate = [
-    {file = "isodate-0.6.0-py2.py3-none-any.whl", hash = "sha256:aa4d33c06640f5352aca96e4b81afd8ab3b47337cc12089822d6f322ac772c81"},
-    {file = "isodate-0.6.0.tar.gz", hash = "sha256:2e364a3d5759479cdb2d37cce6b9376ea504db2ff90252a2e5b7cc89cc9ff2d8"},
+isoduration = [
+    {file = "isoduration-20.11.0-py3-none-any.whl", hash = "sha256:b2904c2a4228c3d44f409c8ae8e2370eb21a26f7ac2ec5446df141dde3452042"},
+    {file = "isoduration-20.11.0.tar.gz", hash = "sha256:ac2f9015137935279eac671f94f89eb00584f940f5dc49462a0c4ee692ba1bd9"},
 ]
 isort = [
     {file = "isort-5.9.3-py3-none-any.whl", hash = "sha256:e17d6e2b81095c9db0a03a8025a957f334d6ea30b26f9ec70805411e5c7c81f2"},
@@ -767,6 +794,10 @@ pytest-black = [
 pytest-isort = [
     {file = "pytest-isort-1.3.0.tar.gz", hash = "sha256:46a12331a701e2f21d48548b2828c8b0a7956dbf1cd5347163f537deb24332dd"},
     {file = "pytest_isort-1.3.0-py3-none-any.whl", hash = "sha256:074255ad393088a2daee6ca7f2305b7b86358ff632f62302896d8d4b2b339107"},
+]
+python-dateutil = [
+    {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
+    {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
 regex = [
     {file = "regex-2021.9.30-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:66696c8336a1b5d1182464f3af3427cc760118f26d0b09a2ddc16a976a4d2637"},

@@ -10,7 +10,7 @@ from datetime import datetime
 
 from aiohttp.client_exceptions import ClientResponseError
 from ciso8601 import parse_datetime
-from isodate import parse_duration
+from isoduration import parse_duration
 
 from . import __version__
 from .base import ChargeAmpsClient

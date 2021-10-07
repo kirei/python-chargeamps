@@ -30,9 +30,9 @@ python = "^3.7"
 aiohttp = "^3.7.2"
 asyncio = "^3.4.3"
 dataclasses-json = "^0.5.2"
-isodate = "^0.6.0"
 marshmallow = "^3.9.0"
 PyJWT = "^2.1.0"
+isoduration = "^20.11.0"
 ciso8601 = "^2.2.0"
 
 [tool.poetry.dev-dependencies]
