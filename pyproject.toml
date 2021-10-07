@@ -5,7 +5,7 @@ profile = "black"
 
 [tool.poetry]
 name = "chargeamps"
-version = "1.4.3"
+version = "1.4.4"
 readme = "README.md"
 description = "Charge-Amps API bindings for Python"
 authors = ["Jakob Schlyter <jakob@kirei.se>"]
@@ -32,7 +32,7 @@ asyncio = "^3.4.3"
 dataclasses-json = "^0.5.2"
 isodate = "^0.6.0"
 marshmallow = "^3.9.0"
-PyJWT = "^1.7.1"
+PyJWT = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

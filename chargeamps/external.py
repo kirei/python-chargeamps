@@ -51,7 +51,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
                 json={"email": self._email, "password": self._password},
             )
             self._token = (await response.json())["token"]
-            token_payload = jwt.decode(self._token, verify=False)
+            token_payload = jwt.decode(self._token, options={"verify_signature": False})
             self._token_expire = token_payload.get("exp", 0)
             self._headers["Authorization"] = f"Bearer {self._token}"
 

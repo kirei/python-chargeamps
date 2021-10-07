@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.4.4 (2021-10-07)
+
+- Use PyJWT 2.1.0 or later (as used by Home Assistant)
+
 ## 1.4.3 (2021-07-02)
 
 - Update default API base URL
