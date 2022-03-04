@@ -45,7 +45,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
     async def _ensure_token(self):
         if self._token_expire < time.time():
             response = await self._session.post(
-                urljoin(self._base_url, "/api/{API_VERSION}/auth/login"),
+                urljoin(self._base_url, f"/api/{API_VERSION}/auth/login"),
                 ssl=self._ssl,
                 headers={"apiKey": self._api_key},
                 json={"email": self._email, "password": self._password},
@@ -78,7 +78,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def get_chargepoints(self) -> List[ChargePoint]:
         """Get all owned chargepoints"""
-        request_uri = "/api/{API_VERSION}/chargepoints/owned"
+        request_uri = f"/api/{API_VERSION}/chargepoints/owned"
         response = await self._get(request_uri)
         res = []
         for chargepoint in await response.json():
