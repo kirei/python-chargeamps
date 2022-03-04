@@ -21,6 +21,7 @@ from .base import (
 API_BASE_URL = "https://eapi.charge.space"
 API_VERSION = "v4"
 
+
 class ChargeAmpsExternalClient(ChargeAmpsClient):
     def __init__(
         self,
@@ -97,7 +98,9 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             query_params["startTime"] = start_time.isoformat()
         if end_time:
             query_params["endTime"] = end_time.isoformat()
-        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
+        request_uri = (
+            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
+        )
         response = await self._get(request_uri, params=query_params)
         res = []
         for session in await response.json():
@@ -108,9 +111,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self, charge_point_id: str, session: int
     ) -> ChargingSession:
         """Get charging session"""
-        request_uri = (
-            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions/{session}"
-        )
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions/{session}"
         response = await self._get(request_uri)
         return ChargingSession.from_dict(await response.json())
 
@@ -139,9 +140,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self, charge_point_id: str, connector_id: int
     ) -> ChargePointConnectorSettings:
         """Get all owned chargepoints"""
-        request_uri = (
-            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
-        )
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         response = await self._get(request_uri)
         return ChargePointConnectorSettings.from_dict(await response.json())
 
@@ -152,7 +151,5 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         payload = settings.to_dict()
         charge_point_id = settings.charge_point_id
         connector_id = settings.connector_id
-        request_uri = (
-            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
-        )
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         await self._put(request_uri, json=payload)
