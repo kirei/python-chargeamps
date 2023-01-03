@@ -27,7 +27,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 aiohttp = "^3.8.1"
 dataclasses-json = "^0.5.2"
 marshmallow = "^3.14.1"
