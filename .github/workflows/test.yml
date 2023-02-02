@@ -32,9 +32,6 @@ jobs:
           poetry config virtualenvs.in-project true
       - name: Install dependencies
         run: poetry install
-      - name: Lint
-        run: |
-          poetry run pylama chargeamps
       - name: Pytest
         run: |
-          poetry run pytest --isort --black
+          poetry run pytest --isort --black --pylama
