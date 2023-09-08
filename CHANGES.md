@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.5.2 (develop)
+
+- Update metadata version handling
+
 ## 1.5.1 (2022-03-06)
 
 - Align dependencies with Home Assistant
