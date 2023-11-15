@@ -1,8 +1,9 @@
 # Release Notes
 
-## 1.5.2 (develop)
+## 1.5.2 (2023-11-15)
 
 - Update metadata version handling
+- Update dependencies
 
 ## 1.5.1 (2022-03-06)
 
