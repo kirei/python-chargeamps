@@ -94,6 +94,7 @@ class ChargingSession(object):
     start_time: Optional[datetime] = datetime_field()
     end_time: Optional[datetime] = datetime_field()
 
+
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
 class StartAuth(object):
