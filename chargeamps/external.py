@@ -16,6 +16,7 @@ from .base import (
     ChargePointSettings,
     ChargePointStatus,
     ChargingSession,
+    StartAuth,
 )
 
 API_BASE_URL = "https://eapi.charge.space"
@@ -153,3 +154,16 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         connector_id = settings.connector_id
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         await self._put(request_uri, json=payload)
+
+    async def remote_start(
+        self, charge_point_id: str, connector_id: int, start_auth: StartAuth
+    ) -> None:
+        """Remote start chargepoint"""
+        payload = start_auth.to_dict()
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/remotestart"
+        await self._put(request_uri, json=payload)
+
+    async def remote_stop(self, charge_point_id: str, connector_id: int) -> None:
+        """Remote stop chargepoint"""
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/remotestop"
+        await self._put(request_uri)

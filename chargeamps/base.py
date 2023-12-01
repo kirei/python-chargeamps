@@ -93,3 +93,12 @@ class ChargingSession(object):
     total_consumption_kwh: float
     start_time: Optional[datetime] = datetime_field()
     end_time: Optional[datetime] = datetime_field()
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True)
+class StartAuth(object):
+    rfid_length: int
+    rfid_format: str
+    rfid: str
+    external_transaction_id: str
