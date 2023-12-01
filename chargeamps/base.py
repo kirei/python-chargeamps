@@ -97,7 +97,7 @@ class ChargingSession(object):
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
 class StartAuth(object):
-    rfidLength: int
-    rfidFormat: str
+    rfid_length: int
+    rfid_format: str
     rfid: str
-    externalTransactionId: str
+    external_transaction_id: str
