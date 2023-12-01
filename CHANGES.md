@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.6.1 (2023-12-01)
+
+- Fix problem with empty body in PUT
+
 ## 1.6.0 (2023-12-01)
 
 - Add remote start/stop using RFID
