@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.6.0 (2023-12-01)
+
+- Add remote start/stop using RFID
+
 ## 1.5.2 (2023-11-15)
 
 - Update metadata version handling
