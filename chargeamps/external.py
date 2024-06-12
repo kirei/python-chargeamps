@@ -3,11 +3,11 @@
 import asyncio  # noqa
 import time
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 from urllib.parse import urljoin
 
-import aiohttp
 import jwt
+from aiohttp import ClientResponse, ClientSession
 
 from .base import (
     ChargeAmpsClient,
@@ -34,7 +34,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._email = email
         self._password = password
         self._api_key = api_key
-        self._session = aiohttp.ClientSession(raise_for_status=True)
+        self._session = ClientSession(raise_for_status=True)
         self._headers = {}
         self._base_url = api_base_url or API_BASE_URL
         self._ssl = False
@@ -57,28 +57,28 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             self._token_expire = token_payload.get("exp", 0)
             self._headers["Authorization"] = f"Bearer {self._token}"
 
-    async def _post(self, path, **kwargs):
+    async def _post(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
         return await self._session.post(
             urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
         )
 
-    async def _get(self, path, **kwargs):
+    async def _get(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
         return await self._session.get(
             urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
         )
 
-    async def _put(self, path, **kwargs):
+    async def _put(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
         return await self._session.put(
             urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
         )
 
-    async def get_chargepoints(self) -> List[ChargePoint]:
+    async def get_chargepoints(self) -> list[ChargePoint]:
         """Get all owned chargepoints"""
         request_uri = f"/api/{API_VERSION}/chargepoints/owned"
         response = await self._get(request_uri)
@@ -92,7 +92,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         charge_point_id: str,
         start_time: Optional[datetime] = None,
         end_time: Optional[datetime] = None,
-    ) -> List[ChargingSession]:
+    ) -> list[ChargingSession]:
         """Get all charging sessions"""
         query_params = {}
         if start_time:

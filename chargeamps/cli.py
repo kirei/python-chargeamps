@@ -29,7 +29,9 @@ async def get_chargepoint_id(client: ChargeAmpsClient, args: argparse.Namespace)
     return chargepoints[0].id
 
 
-async def command_list_chargepoints(client: ChargeAmpsClient, args: argparse.Namespace):
+async def command_list_chargepoints(
+    client: ChargeAmpsClient, args: argparse.Namespace
+) -> None:
     res = []
     for cp in await client.get_chargepoints():
         res.append(cp.to_dict())
@@ -38,7 +40,7 @@ async def command_list_chargepoints(client: ChargeAmpsClient, args: argparse.Nam
 
 async def command_get_chargepoint_status(
     client: ChargeAmpsClient, args: argparse.Namespace
-):
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     cp = await client.get_chargepoint_status(charge_point_id)
     if args.connector_id:
@@ -51,7 +53,7 @@ async def command_get_chargepoint_status(
 
 async def command_get_chargepoint_sessions(
     client: ChargeAmpsClient, args: argparse.Namespace
-):
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     if args.session:
         session = await client.get_chargingsession(charge_point_id, args.session)
@@ -74,7 +76,7 @@ async def command_get_chargepoint_sessions(
 
 async def command_get_chargepoint_settings(
     client: ChargeAmpsClient, args: argparse.Namespace
-):
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     settings = await client.get_chargepoint_settings(charge_point_id)
     print(json.dumps(settings.to_dict(), indent=4))
@@ -82,7 +84,7 @@ async def command_get_chargepoint_settings(
 
 async def command_set_chargepoint_settings(
     client: ChargeAmpsClient, args: argparse.Namespace
-):
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     settings = await client.get_chargepoint_settings(charge_point_id)
     if args.dimmer:
@@ -96,7 +98,7 @@ async def command_set_chargepoint_settings(
 
 async def command_get_connector_settings(
     client: ChargeAmpsClient, args: argparse.Namespace
-):
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     if args.connector_id:
         connector_ids = [args.connector_id]
@@ -114,7 +116,7 @@ async def command_get_connector_settings(
 
 async def command_set_connector_settings(
     client: ChargeAmpsClient, args: argparse.Namespace
-):
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     settings = await client.get_chargepoint_connector_settings(
@@ -135,7 +137,9 @@ async def command_set_connector_settings(
     print(json.dumps(settings.to_dict(), indent=4))
 
 
-async def command_remote_start(client: ChargeAmpsClient, args: argparse.Namespace):
+async def command_remote_start(
+    client: ChargeAmpsClient, args: argparse.Namespace
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     start_auth = StartAuth(
@@ -147,7 +151,9 @@ async def command_remote_start(client: ChargeAmpsClient, args: argparse.Namespac
     await client.remote_start(charge_point_id, connector_id, start_auth)
 
 
-async def command_remote_stop(client: ChargeAmpsClient, args: argparse.Namespace):
+async def command_remote_stop(
+    client: ChargeAmpsClient, args: argparse.Namespace
+) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     await client.remote_stop(charge_point_id, connector_id)
@@ -164,7 +170,7 @@ def add_arg_chargepoint(parser, required=False):
     )
 
 
-def add_arg_connector(parser, required=False):
+def add_arg_connector(parser, required=False) -> None:
     parser.add_argument(
         "--connector",
         dest="connector_id",
