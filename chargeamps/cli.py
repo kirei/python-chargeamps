@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import sys
+import uuid
 from datetime import datetime
 
 from aiohttp.client_exceptions import ClientResponseError
@@ -13,7 +14,7 @@ from ciso8601 import parse_datetime
 from isoduration import parse_duration
 
 from . import __version__
-from .base import ChargeAmpsClient
+from .base import ChargeAmpsClient, StartAuth
 from .external import ChargeAmpsExternalClient
 
 logger = logging.getLogger(__name__)
@@ -132,6 +133,26 @@ async def command_set_connector_settings(
         charge_point_id, connector_id
     )
     print(json.dumps(settings.to_dict(), indent=4))
+
+
+async def command_remote_start(client: ChargeAmpsClient, args: argparse.Namespace):
+    charge_point_id = await get_chargepoint_id(client, args)
+    connector_id = args.connector_id
+    start_auth = StartAuth(
+        rfid_length=len(args.rfid) * 2,
+        rfid_format="hex",
+        rfid=args.rfid,
+        external_transaction_id=str(uuid.uuid4()),
+    )
+    res = await client.remote_start(charge_point_id, connector_id, start_auth)
+    print(json.dumps(res.to_dict(), indent=4))
+
+
+async def command_remote_stop(client: ChargeAmpsClient, args: argparse.Namespace):
+    charge_point_id = await get_chargepoint_id(client, args)
+    connector_id = args.connector_id
+    res = await client.remote_stop(charge_point_id, connector_id)
+    print(json.dumps(res.to_dict(), indent=4))
 
 
 def add_arg_chargepoint(parser, required=False):
@@ -287,6 +308,27 @@ async def main_loop() -> None:
         required=False,
         help="Max current",
     )
+
+    parser_remote_start = subparsers.add_parser(
+        "start-connector", help="Remote start connector"
+    )
+    parser_remote_start.set_defaults(func=command_remote_start)
+    add_arg_chargepoint(parser_remote_start)
+    add_arg_connector(parser_remote_start)
+    parser_remote_start.add_argument(
+        "--rfid",
+        dest="rfid",
+        type=str,
+        required=True,
+        help="RFID identifier",
+    )
+
+    parser_remote_stop = subparsers.add_parser(
+        "stop-connector", help="Remote stop connector"
+    )
+    parser_remote_stop.set_defaults(func=command_remote_stop)
+    add_arg_chargepoint(parser_remote_stop)
+    add_arg_connector(parser_remote_stop)
 
     args = parser.parse_args()
 
