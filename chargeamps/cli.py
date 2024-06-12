@@ -139,20 +139,18 @@ async def command_remote_start(client: ChargeAmpsClient, args: argparse.Namespac
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     start_auth = StartAuth(
-        rfid_length=len(args.rfid) * 2,
+        rfid_length=len(args.rfid) // 2,
         rfid_format="hex",
         rfid=args.rfid,
         external_transaction_id=str(uuid.uuid4()),
     )
-    res = await client.remote_start(charge_point_id, connector_id, start_auth)
-    print(json.dumps(res.to_dict(), indent=4))
+    await client.remote_start(charge_point_id, connector_id, start_auth)
 
 
 async def command_remote_stop(client: ChargeAmpsClient, args: argparse.Namespace):
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
-    res = await client.remote_stop(charge_point_id, connector_id)
-    print(json.dumps(res.to_dict(), indent=4))
+    await client.remote_stop(charge_point_id, connector_id)
 
 
 def add_arg_chargepoint(parser, required=False):
