@@ -10,13 +10,13 @@ from dataclasses_json import LetterCase, dataclass_json
 from .utils import datetime_field
 
 
-class ChargeAmpsClient(metaclass=ABCMeta):
+class ChargeAmpsClient(metaclass=ABCMeta):  # noqa
     pass
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargePointConnector(object):
+class ChargePointConnector:
     charge_point_id: str
     connector_id: int
     type: str
@@ -24,7 +24,7 @@ class ChargePointConnector(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargePoint(object):
+class ChargePoint:
     id: str
     name: str
     password: str
@@ -37,7 +37,7 @@ class ChargePoint(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargePointMeasurement(object):
+class ChargePointMeasurement:
     phase: str
     current: float
     voltage: float
@@ -45,7 +45,7 @@ class ChargePointMeasurement(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargePointConnectorStatus(object):
+class ChargePointConnectorStatus:
     charge_point_id: str
     connector_id: int
     total_consumption_kwh: float
@@ -58,7 +58,7 @@ class ChargePointConnectorStatus(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargePointStatus(object):
+class ChargePointStatus:
     id: str
     status: str
     connector_statuses: List[ChargePointConnectorStatus]
@@ -66,7 +66,7 @@ class ChargePointStatus(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=False)
-class ChargePointSettings(object):
+class ChargePointSettings:
     id: str
     dimmer: str
     down_light: bool
@@ -74,7 +74,7 @@ class ChargePointSettings(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=False)
-class ChargePointConnectorSettings(object):
+class ChargePointConnectorSettings:
     charge_point_id: str
     connector_id: int
     mode: str
@@ -85,7 +85,7 @@ class ChargePointConnectorSettings(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class ChargingSession(object):
+class ChargingSession:
     id: str
     charge_point_id: str
     connector_id: int
@@ -97,7 +97,7 @@ class ChargingSession(object):
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class StartAuth(object):
+class StartAuth:
     rfid_length: int
     rfid_format: str
     rfid: str
