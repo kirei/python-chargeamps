@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.7.0 (develop)
+
+- Add CLI for remote start/stop
+
 ## 1.6.1 (2023-12-01)
 
 - Fix problem with empty body in PUT
