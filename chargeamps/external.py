@@ -9,8 +9,8 @@ from urllib.parse import urljoin
 import jwt
 from aiohttp import ClientResponse, ClientSession
 
-from .base import (
-    ChargeAmpsClient,
+from .base import ChargeAmpsClient
+from .models import (
     ChargePoint,
     ChargePointConnectorSettings,
     ChargePointSettings,
