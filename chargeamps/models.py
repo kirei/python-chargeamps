@@ -1,7 +1,8 @@
-"""Data classes for ChargeAmps API"""
+"""Base class and data classes for ChargeAmps API"""
 
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
@@ -44,10 +45,10 @@ class ChargePointConnectorStatus:
     connector_id: int
     total_consumption_kwh: float
     status: str
-    measurements: list[ChargePointMeasurement] | None
-    start_time: datetime | None = datetime_field()
-    end_time: datetime | None = datetime_field()
-    session_id: str | None = None
+    measurements: Optional[list[ChargePointMeasurement]]
+    start_time: Optional[datetime] = datetime_field()
+    end_time: Optional[datetime] = datetime_field()
+    session_id: Optional[str] = None
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
@@ -74,7 +75,7 @@ class ChargePointConnectorSettings:
     mode: str
     rfid_lock: bool
     cable_lock: bool
-    max_current: float | None = None
+    max_current: Optional[float] = None
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
@@ -85,8 +86,8 @@ class ChargingSession:
     connector_id: int
     session_type: str
     total_consumption_kwh: float
-    start_time: datetime | None = datetime_field()
-    end_time: datetime | None = datetime_field()
+    start_time: Optional[datetime] = datetime_field()
+    end_time: Optional[datetime] = datetime_field()
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
