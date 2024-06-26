@@ -41,7 +41,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._token = None
         self._token_expire = 0
 
-    async def shutdown(self):
+    async def shutdown(self) -> None:
         await self._session.close()
 
     async def _ensure_token(self):
