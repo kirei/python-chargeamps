@@ -1,104 +1,52 @@
-"""Base class and data classes for ChargeAmps API"""
+"""Base class for ChargeAmps API"""
 
-from abc import ABCMeta
-from dataclasses import dataclass
-from datetime import datetime
-from typing import List, Optional
+from abc import ABCMeta, abstractmethod
 
-from dataclasses_json import LetterCase, dataclass_json
-
-from .utils import datetime_field
-
-
-class ChargeAmpsClient(metaclass=ABCMeta):  # noqa
-    pass
+from .models import (
+    ChargePoint,
+    ChargePointConnectorSettings,
+    ChargePointSettings,
+    ChargePointStatus,
+)
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class ChargePointConnector:
-    charge_point_id: str
-    connector_id: int
-    type: str
+class ChargeAmpsClient(metaclass=ABCMeta):
+    @abstractmethod
+    async def shutdown(self):
+        pass
 
+    @abstractmethod
+    async def get_chargepoints(self) -> list[ChargePoint]:
+        """Get all owned chargepoints"""
+        pass
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class ChargePoint:
-    id: str
-    name: str
-    password: str
-    type: str
-    is_loadbalanced: bool
-    firmware_version: str
-    hardware_version: str
-    connectors: List[ChargePointConnector]
+    @abstractmethod
+    async def get_chargepoint_status(self, charge_point_id: str) -> ChargePointStatus:
+        """Get charge point status"""
+        pass
 
+    @abstractmethod
+    async def get_chargepoint_settings(
+        self, charge_point_id: str
+    ) -> ChargePointSettings:
+        """Get chargepoint settings"""
+        pass
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class ChargePointMeasurement:
-    phase: str
-    current: float
-    voltage: float
+    @abstractmethod
+    async def set_chargepoint_settings(self, settings: ChargePointSettings) -> None:
+        """Set chargepoint settings"""
+        pass
 
+    @abstractmethod
+    async def get_chargepoint_connector_settings(
+        self, charge_point_id: str, connector_id: int
+    ) -> ChargePointConnectorSettings:
+        """Get all owned chargepoints"""
+        pass
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class ChargePointConnectorStatus:
-    charge_point_id: str
-    connector_id: int
-    total_consumption_kwh: float
-    status: str
-    measurements: Optional[List[ChargePointMeasurement]]
-    start_time: Optional[datetime] = datetime_field()
-    end_time: Optional[datetime] = datetime_field()
-    session_id: Optional[str] = None
-
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class ChargePointStatus:
-    id: str
-    status: str
-    connector_statuses: List[ChargePointConnectorStatus]
-
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=False)
-class ChargePointSettings:
-    id: str
-    dimmer: str
-    down_light: bool
-
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=False)
-class ChargePointConnectorSettings:
-    charge_point_id: str
-    connector_id: int
-    mode: str
-    rfid_lock: bool
-    cable_lock: bool
-    max_current: Optional[float] = None
-
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class ChargingSession:
-    id: str
-    charge_point_id: str
-    connector_id: int
-    session_type: str
-    total_consumption_kwh: float
-    start_time: Optional[datetime] = datetime_field()
-    end_time: Optional[datetime] = datetime_field()
-
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class StartAuth:
-    rfid_length: int
-    rfid_format: str
-    rfid: str
-    external_transaction_id: str
+    @abstractmethod
+    async def set_chargepoint_connector_settings(
+        self, settings: ChargePointConnectorSettings
+    ) -> None:
+        """Get all owned chargepoints"""
+        pass
