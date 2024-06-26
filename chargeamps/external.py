@@ -135,7 +135,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def set_chargepoint_settings(self, settings: ChargePointSettings) -> None:
         """Set chargepoint settings"""
-        payload = settings.to_dict()
+        payload = settings.model_dump(by_alias=True)
         charge_point_id = settings.id
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/settings"
         await self._put(request_uri, json=payload)
@@ -153,7 +153,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self, settings: ChargePointConnectorSettings
     ) -> None:
         """Get all owned chargepoints"""
-        payload = settings.to_dict()
+        payload = settings.model_dump(by_alias=True)
         charge_point_id = settings.charge_point_id
         connector_id = settings.connector_id
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
@@ -163,7 +163,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self, charge_point_id: str, connector_id: int, start_auth: StartAuth
     ) -> None:
         """Remote start chargepoint"""
-        payload = start_auth.to_dict()
+        payload = start_auth.model_dump(by_alias=True)
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/remotestart"
         await self._put(request_uri, json=payload)
 

@@ -23,9 +23,6 @@ class FrozenBaseSchema(BaseModel):
         frozen=True,
     )
 
-    def to_dict(self) -> dict:
-        return self.dict(by_alias=True)
-
 
 class ChargePointConnector(FrozenBaseSchema):
     charge_point_id: str
