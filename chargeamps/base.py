@@ -12,7 +12,7 @@ from .models import (
 
 class ChargeAmpsClient(metaclass=ABCMeta):
     @abstractmethod
-    async def shutdown(self):
+    async def shutdown(self) -> None:
         pass
 
     @abstractmethod
