@@ -171,3 +171,8 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         """Remote stop chargepoint"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/remotestop"
         await self._put(request_uri, json="{}")
+
+    async def reboot(self, charge_point_id) -> None:
+        """Reboot chargepoint"""
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/reboot"
+        await self._put(request_uri, json="{}")
