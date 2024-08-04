@@ -14,8 +14,8 @@ from ciso8601 import parse_datetime
 from isoduration import parse_duration
 
 from . import __version__
-from .base import ChargeAmpsClient, StartAuth
-from .external import ChargeAmpsExternalClient
+from .base import ChargeAmpsClient
+from .external import ChargeAmpsExternalClient, StartAuth
 
 logger = logging.getLogger(__name__)
 
@@ -157,6 +157,11 @@ async def command_remote_stop(
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     await client.remote_stop(charge_point_id, connector_id)
+
+
+async def command_reboot(client: ChargeAmpsClient, args: argparse.Namespace) -> None:
+    charge_point_id = await get_chargepoint_id(client, args)
+    await client.reboot(charge_point_id)
 
 
 def add_arg_chargepoint(parser, required=False):
@@ -333,6 +338,10 @@ async def main_loop() -> None:
     parser_remote_stop.set_defaults(func=command_remote_stop)
     add_arg_chargepoint(parser_remote_stop)
     add_arg_connector(parser_remote_stop)
+
+    parser_reboot = subparsers.add_parser("reboot", help="Reboot chargepoint")
+    parser_reboot.set_defaults(func=command_reboot)
+    add_arg_chargepoint(parser_reboot)
 
     args = parser.parse_args()
 
