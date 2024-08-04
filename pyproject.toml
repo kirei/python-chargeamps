@@ -28,12 +28,11 @@ chargeamps = "chargeamps.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-aiohttp = "^3.8.5"
-dataclasses-json = "^0.5.2"
-marshmallow = "^3.14.1"
+aiohttp = "^3.9.5"
 PyJWT = "^2.1.0"
 isoduration = "^20.11.0"
 ciso8601 = "^2.2.0"
+pydantic = "^2.7.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

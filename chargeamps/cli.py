@@ -34,7 +34,7 @@ async def command_list_chargepoints(
 ) -> None:
     res = []
     for cp in await client.get_chargepoints():
-        res.append(cp.to_dict())
+        res.append(cp.model_dump(by_alias=True))
     print(json.dumps(res, indent=4))
 
 
@@ -46,9 +46,9 @@ async def command_get_chargepoint_status(
     if args.connector_id:
         for c in cp.connector_statuses:
             if c.connector_id == args.connector_id:
-                print(json.dumps(c.to_dict(), indent=4))
+                print(json.dumps(c.model_dump(by_alias=True), indent=4))
     else:
-        print(json.dumps(cp.to_dict(), indent=4))
+        print(json.dumps(cp.model_dump(by_alias=True), indent=4))
 
 
 async def command_get_chargepoint_sessions(
@@ -69,7 +69,7 @@ async def command_get_chargepoint_sessions(
             charge_point_id, start_time, end_time
         ):
             if args.connector_id is None or args.connector_id == session.connector_id:
-                res.append(session.to_dict())
+                res.append(session.model_dump(by_alias=True))
         res = sorted(res, key=lambda i: i["id"])
         print(json.dumps(res, indent=4))
 
@@ -79,7 +79,7 @@ async def command_get_chargepoint_settings(
 ) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     settings = await client.get_chargepoint_settings(charge_point_id)
-    print(json.dumps(settings.to_dict(), indent=4))
+    print(json.dumps(settings.model_dump(by_alias=True), indent=4))
 
 
 async def command_set_chargepoint_settings(
@@ -93,7 +93,7 @@ async def command_set_chargepoint_settings(
         settings.down_light = args.downlight
     await client.set_chargepoint_settings(settings)
     settings = await client.get_chargepoint_settings(charge_point_id)
-    print(json.dumps(settings.to_dict(), indent=4))
+    print(json.dumps(settings.model_dump(by_alias=True), indent=4))
 
 
 async def command_get_connector_settings(
@@ -110,7 +110,7 @@ async def command_get_connector_settings(
         settings = await client.get_chargepoint_connector_settings(
             charge_point_id, connector_id
         )
-        res.append(settings.to_dict())
+        res.append(settings.model_dump(by_alias=True))
     print(json.dumps(res, indent=4))
 
 
@@ -134,7 +134,7 @@ async def command_set_connector_settings(
     settings = await client.get_chargepoint_connector_settings(
         charge_point_id, connector_id
     )
-    print(json.dumps(settings.to_dict(), indent=4))
+    print(json.dumps(settings.model_dump(by_alias=True), indent=4))
 
 
 async def command_remote_start(
