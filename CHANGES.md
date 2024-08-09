@@ -3,6 +3,7 @@
 ## 1.7.0 (develop)
 
 - Add CLI for remote start/stop
+- Add CLI for reboot
 
 ## 1.6.1 (2023-12-01)
 
