@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.7.0 (develop)
+## 1.7.0 (2024-08-29)
 
 - Add CLI for remote start/stop
 - Add CLI for reboot
