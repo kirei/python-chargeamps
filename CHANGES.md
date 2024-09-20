@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.8.0 (2024-09-20)
+
+- Support token refresh
+
 ## 1.7.0 (2024-08-29)
 
 - Add CLI for remote start/stop

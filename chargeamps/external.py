@@ -5,9 +5,11 @@ import time
 from datetime import datetime
 from typing import Optional
 from urllib.parse import urljoin
+import logging
 
 import jwt
 from aiohttp import ClientResponse, ClientSession
+from aiohttp.web import HTTPException
 
 from .base import ChargeAmpsClient
 from .models import (
@@ -31,6 +33,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         api_key: str,
         api_base_url: Optional[str] = None,
     ):
+        self._logger = logging.getLogger(__name__).getChild(self.__class__.__name__)
         self._email = email
         self._password = password
         self._api_key = api_key
@@ -40,22 +43,69 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._ssl = False
         self._token = None
         self._token_expire = 0
+        self._refresh_token = None
 
     async def shutdown(self) -> None:
         await self._session.close()
 
-    async def _ensure_token(self):
-        if self._token_expire < time.time():
-            response = await self._session.post(
-                urljoin(self._base_url, f"/api/{API_VERSION}/auth/login"),
-                ssl=self._ssl,
-                headers={"apiKey": self._api_key},
-                json={"email": self._email, "password": self._password},
-            )
-            self._token = (await response.json())["token"]
-            token_payload = jwt.decode(self._token, options={"verify_signature": False})
-            self._token_expire = token_payload.get("exp", 0)
-            self._headers["Authorization"] = f"Bearer {self._token}"
+    async def _ensure_token(self) -> None:
+        if self._token_expire > time.time():
+            return
+
+        if self._token is None:
+            self._logger.info("Token not found")
+        elif self._token_expire > 0:
+            self._logger.info("Token expired")
+
+        response = None
+
+        if self._refresh_token:
+            try:
+                self._logger.info("Found refresh token, try refresh")
+                response = await self._session.post(
+                    urljoin(self._base_url, f"/api/{API_VERSION}/auth/refreshToken"),
+                    ssl=self._ssl,
+                    headers={"apiKey": self._api_key},
+                    json={"token": self._token, "refreshToken": self._refresh_token},
+                )
+                self._logger.debug("Refresh successful")
+            except HTTPException:
+                self._logger.warning("Token refresh failed")
+                self._token = None
+                self._refresh_token = None
+        else:
+            self._token = None
+
+        if self._token is None:
+            try:
+                self._logger.debug("Try login")
+                response = await self._session.post(
+                    urljoin(self._base_url, f"/api/{API_VERSION}/auth/login"),
+                    ssl=self._ssl,
+                    headers={"apiKey": self._api_key},
+                    json={"email": self._email, "password": self._password},
+                )
+                self._logger.debug("Login successful")
+            except HTTPException as exc:
+                self._logger.error("Login failed")
+                self._token = None
+                self._refresh_token = None
+                self._token_expire = 0
+                raise exc
+
+        if response is None:
+            self._logger.error("No response")
+            return
+
+        response_payload = await response.json()
+
+        self._token = response_payload["token"]
+        self._refresh_token = response_payload["refreshToken"]
+
+        token_payload = jwt.decode(self._token, options={"verify_signature": False})
+        self._token_expire = token_payload.get("exp", 0)
+
+        self._headers["Authorization"] = f"Bearer {self._token}"
 
     async def _post(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
