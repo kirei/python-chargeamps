@@ -2,7 +2,7 @@
 
 [tool.poetry]
 name = "chargeamps"
-version = "1.8.1"
+version = "1.8.2"
 readme = "README.md"
 description = "Charge-Amps API bindings for Python"
 authors = ["Jakob Schlyter <jakob@kirei.se>"]
@@ -27,12 +27,12 @@ classifiers = [
 chargeamps = "chargeamps.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-aiohttp = "^3.9.5"
-PyJWT = "^2.1.0"
+python = "^3.12"
+aiohttp = "^3.10.5"
+PyJWT = "^2.9.0"
 isoduration = "^20.11.0"
-ciso8601 = "^2.2.0"
-pydantic = "^2.7.4"
+ciso8601 = "^2.3.1"
+pydantic = "^2.9.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.4.3"

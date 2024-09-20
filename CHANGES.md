@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.8.2 (2024-09-20)
+
+- Align dependencies with Home Assistant
+
 ## 1.8.1 (2024-09-20)
 
 - Fix backwards compatibility
