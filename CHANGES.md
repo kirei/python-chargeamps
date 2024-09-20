@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.8.1 (2024-09-20)
+
+- Fix backwards compatibility
+
 ## 1.8.0 (2024-09-20)
 
 - Support token refresh

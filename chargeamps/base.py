@@ -4,10 +4,23 @@ from abc import ABCMeta, abstractmethod
 
 from .models import (
     ChargePoint,
+    ChargePointConnector,
     ChargePointConnectorSettings,
+    ChargePointConnectorStatus,
     ChargePointSettings,
     ChargePointStatus,
+    StartAuth,
 )
+
+__all__ = [
+    "ChargePoint",
+    "ChargePointConnector",
+    "ChargePointConnectorStatus",
+    "ChargePointConnectorSettings",
+    "ChargePointSettings",
+    "ChargePointStatus",
+    "StartAuth",
+]
 
 
 class ChargeAmpsClient(metaclass=ABCMeta):
