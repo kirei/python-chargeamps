@@ -19,6 +19,8 @@ from .models import (
     ChargePointStatus,
     ChargingSession,
     StartAuth,
+    User,
+    Partner,
 )
 
 API_BASE_URL = "https://eapi.charge.space"
@@ -44,6 +46,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._token = None
         self._token_expire = 0
         self._refresh_token = None
+        self._user: User = None
 
     async def shutdown(self) -> None:
         await self._session.close()
@@ -72,6 +75,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             except HTTPException:
                 self._logger.warning("Token refresh failed")
                 self._token = None
+                self._user = None
                 self._refresh_token = None
         else:
             self._token = None
@@ -89,6 +93,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             except HTTPException as exc:
                 self._logger.error("Login failed")
                 self._token = None
+                self._user = None
                 self._refresh_token = None
                 self._token_expire = 0
                 raise exc
@@ -100,6 +105,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         response_payload = await response.json()
 
         self._token = response_payload["token"]
+        self._user = response_payload["user"]
         self._refresh_token = response_payload["refreshToken"]
 
         token_payload = jwt.decode(self._token, options={"verify_signature": False})
@@ -209,6 +215,13 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         await self._put(request_uri, json=payload)
 
+    async def get_partner(self, charge_point_id: str) -> Partner:
+        """Get partner details"""
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/partner"
+        response = await self._get(request_uri)
+        payload = await response.json()
+        return Partner.model_validate(payload)
+
     async def remote_start(
         self, charge_point_id: str, connector_id: int, start_auth: StartAuth
     ) -> None:
@@ -226,3 +239,13 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         """Reboot chargepoint"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/reboot"
         await self._put(request_uri, json="{}")
+
+    async def get_logged_in_user(self) -> User:
+        """Get authenticated user info"""
+        user_id = self._user["id"]
+
+        request_uri = f"/api/{API_VERSION}/users/{user_id}"
+        response = await self._get(request_uri)
+        payload = await response.json()
+
+        return User.model_validate(payload)
