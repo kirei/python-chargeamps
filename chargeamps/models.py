@@ -17,7 +17,7 @@ CustomDateTime = Annotated[
 
 def feature_required(feature_flag):
     def decorator(cls):
-        if feature_flag:
+        if feature_flag == "organisations":
             return cls
         else:
             raise ImportError(f"Feature '{feature_flag}' is not enabled")
