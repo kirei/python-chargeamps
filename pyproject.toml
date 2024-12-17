@@ -17,17 +17,16 @@ keywords = [
 classifiers = [
     'License :: OSI Approved :: BSD License',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
 ]
 
 [tool.poetry.scripts]
 chargeamps = "chargeamps.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 aiohttp = "^3.10.5"
 PyJWT = "^2.9.0"
 isoduration = "^20.11.0"
@@ -37,7 +36,7 @@ pydantic = "^2.9.2"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.4.3"
 pytest-ruff = "^0.3.2"
-ruff = "^0.4.8"
+ruff = ">=0.8.3"
 pytest-asyncio = "^0.23.8"
 
 [build-system]
