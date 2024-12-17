@@ -5,7 +5,7 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, PlainSerializer
 from pydantic.alias_generators import to_camel
-from typing_extensions import Annotated
+from typing import Annotated
 
 CustomDateTime = Annotated[
     datetime,
