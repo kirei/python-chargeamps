@@ -242,6 +242,9 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def get_logged_in_user(self) -> User:
         """Get authenticated user info"""
+        if not self._user or not isinstance(self._user, dict):
+            raise ValueError("No user is currently logged in")
+
         user_id = self._user["id"]
 
         request_uri = f"/api/{API_VERSION}/users/{user_id}"
