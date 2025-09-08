@@ -1,4 +1,5 @@
 import pytest
+
 from chargeamps.external import ChargeAmpsExternalClient
 
 

@@ -149,20 +149,18 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             query_params["startTime"] = start_time.isoformat()
         if end_time:
             query_params["endTime"] = end_time.isoformat()
-        request_uri = (
-            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
-        )
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
         response = await self._get(request_uri, params=query_params)
         res = []
         for session in await response.json():
             res.append(ChargingSession.model_validate(session))
         return res
 
-    async def get_chargingsession(
-        self, charge_point_id: str, session: int
-    ) -> ChargingSession:
+    async def get_chargingsession(self, charge_point_id: str, session: int) -> ChargingSession:
         """Get charging session"""
-        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions/{session}"
+        request_uri = (
+            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions/{session}"
+        )
         response = await self._get(request_uri)
         payload = await response.json()
         return ChargingSession.model_validate(payload)
@@ -174,9 +172,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         payload = await response.json()
         return ChargePointStatus.model_validate(payload)
 
-    async def get_chargepoint_settings(
-        self, charge_point_id: str
-    ) -> ChargePointSettings:
+    async def get_chargepoint_settings(self, charge_point_id: str) -> ChargePointSettings:
         """Get chargepoint settings"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/settings"
         response = await self._get(request_uri)
@@ -194,7 +190,9 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self, charge_point_id: str, connector_id: int
     ) -> ChargePointConnectorSettings:
         """Get all owned chargepoints"""
-        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
+        request_uri = (
+            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
+        )
         response = await self._get(request_uri)
         payload = await response.json()
         return ChargePointConnectorSettings.model_validate(payload)
@@ -206,7 +204,9 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         payload = settings.model_dump(by_alias=True)
         charge_point_id = settings.charge_point_id
         connector_id = settings.connector_id
-        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
+        request_uri = (
+            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
+        )
         await self._put(request_uri, json=payload)
 
     async def remote_start(
