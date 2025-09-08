@@ -29,9 +29,7 @@ async def get_chargepoint_id(client: ChargeAmpsClient, args: argparse.Namespace)
     return chargepoints[0].id
 
 
-async def command_list_chargepoints(
-    client: ChargeAmpsClient, args: argparse.Namespace
-) -> None:
+async def command_list_chargepoints(client: ChargeAmpsClient, args: argparse.Namespace) -> None:
     res = []
     for cp in await client.get_chargepoints():
         res.append(cp.model_dump(by_alias=True))
@@ -65,9 +63,7 @@ async def command_get_chargepoint_sessions(
             start_time = parse_datetime(args.start_time) if args.start_time else None
             end_time = parse_datetime(args.end_time) if args.end_time else None
         res = []
-        for session in await client.get_all_chargingsessions(
-            charge_point_id, start_time, end_time
-        ):
+        for session in await client.get_all_chargingsessions(charge_point_id, start_time, end_time):
             if args.connector_id is None or args.connector_id == session.connector_id:
                 res.append(session.model_dump(by_alias=True))
         res = sorted(res, key=lambda i: i["id"])
@@ -107,9 +103,7 @@ async def command_get_connector_settings(
         connector_ids = [c.connector_id for c in cp.connector_statuses]
     res = []
     for connector_id in connector_ids:
-        settings = await client.get_chargepoint_connector_settings(
-            charge_point_id, connector_id
-        )
+        settings = await client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         res.append(settings.model_dump(by_alias=True))
     print(json.dumps(res, indent=4))
 
@@ -119,9 +113,7 @@ async def command_set_connector_settings(
 ) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
-    settings = await client.get_chargepoint_connector_settings(
-        charge_point_id, connector_id
-    )
+    settings = await client.get_chargepoint_connector_settings(charge_point_id, connector_id)
     if args.max_current is not None:
         settings.max_current = args.max_current
     if args.enabled is not None:
@@ -131,15 +123,11 @@ async def command_set_connector_settings(
     if args.cable_lock is not None:
         settings.cable_lock = args.cable_lock
     await client.set_chargepoint_connector_settings(settings)
-    settings = await client.get_chargepoint_connector_settings(
-        charge_point_id, connector_id
-    )
+    settings = await client.get_chargepoint_connector_settings(charge_point_id, connector_id)
     print(json.dumps(settings.model_dump(by_alias=True), indent=4))
 
 
-async def command_remote_start(
-    client: ChargeAmpsClient, args: argparse.Namespace
-) -> None:
+async def command_remote_start(client: ChargeAmpsClient, args: argparse.Namespace) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     start_auth = StartAuth(
@@ -151,9 +139,7 @@ async def command_remote_start(
     await client.remote_start(charge_point_id, connector_id, start_auth)
 
 
-async def command_remote_stop(
-    client: ChargeAmpsClient, args: argparse.Namespace
-) -> None:
+async def command_remote_stop(client: ChargeAmpsClient, args: argparse.Namespace) -> None:
     charge_point_id = await get_chargepoint_id(client, args)
     connector_id = args.connector_id
     await client.remote_stop(charge_point_id, connector_id)
@@ -318,9 +304,7 @@ async def main_loop() -> None:
         help="Max current",
     )
 
-    parser_remote_start = subparsers.add_parser(
-        "start-connector", help="Remote start connector"
-    )
+    parser_remote_start = subparsers.add_parser("start-connector", help="Remote start connector")
     parser_remote_start.set_defaults(func=command_remote_start)
     add_arg_chargepoint(parser_remote_start)
     add_arg_connector(parser_remote_start)
@@ -332,9 +316,7 @@ async def main_loop() -> None:
         help="RFID identifier",
     )
 
-    parser_remote_stop = subparsers.add_parser(
-        "stop-connector", help="Remote stop connector"
-    )
+    parser_remote_stop = subparsers.add_parser("stop-connector", help="Remote stop connector")
     parser_remote_stop.set_defaults(func=command_remote_stop)
     add_arg_chargepoint(parser_remote_stop)
     add_arg_connector(parser_remote_stop)

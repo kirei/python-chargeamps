@@ -1,17 +1,14 @@
 """Data models for ChargeAmps API"""
 
 from datetime import datetime
-from typing import Optional
+from typing import Annotated, Optional
 
 from pydantic import BaseModel, ConfigDict, PlainSerializer
 from pydantic.alias_generators import to_camel
-from typing import Annotated
 
 CustomDateTime = Annotated[
     datetime,
-    PlainSerializer(
-        lambda _datetime: _datetime.strftime("%Y-%m-%dT%H:%M:%SZ"), return_type=str
-    ),
+    PlainSerializer(lambda _datetime: _datetime.strftime("%Y-%m-%dT%H:%M:%SZ"), return_type=str),
 ]
 
 

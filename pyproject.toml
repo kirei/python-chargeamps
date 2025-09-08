@@ -1,16 +1,14 @@
 # PEP 518: https://www.python.org/dev/peps/pep-0518/
 
-[tool.poetry]
+[project]
 name = "chargeamps"
-version = "1.8.2"
+dynamic = ["version"]
 readme = "README.md"
 description = "Charge-Amps API bindings for Python"
-authors = ["Jakob Schlyter <jakob@kirei.se>"]
-license = "BSD-2-Clause"
-repository = "https://github.com/kirei/python-chargeamps"
-packages = [
-    { include = "chargeamps" }
+authors = [
+    {name="Jakob Schlyter", email = "jakob@kirei.se"}
 ]
+license = "BSD-2-Clause"
 keywords = [
     "ev"
 ]
@@ -21,36 +19,39 @@ classifiers = [
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
 ]
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "aiohttp>=3.12.15",
+    "ciso8601>=2.3.3",
+    "isoduration>=20.11.0",
+    "pydantic>=2.11.7",
+    "pyjwt>=2.10.1",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 chargeamps = "chargeamps.cli:main"
 
-[tool.poetry.dependencies]
-python = "^3.11"
-aiohttp = "^3.10.5"
-PyJWT = "^2.9.0"
-isoduration = "^20.11.0"
-ciso8601 = "^2.3.1"
-pydantic = "^2.9.2"
+[project.urls]
+repository = "https://github.com/kirei/python-chargeamps.git"
+issues = "https://github.com/kirei/python-chargeamps/issues"
 
-[tool.poetry.group.dev.dependencies]
-pytest = ">=7.4.3"
-pytest-ruff = "^0.3.2"
-ruff = ">=0.8.3"
-pytest-asyncio = "^0.23.8"
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.1.0",
+    "pytest-ruff>=0.5",
+    "ruff>=0.12.12",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
 
-[tool.isort]
-profile = "black"
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
 
-[tool.pylama.linter.pycodestyle]
-max_line_length = 120
-
-[tool.pylama.linter.mccabe]
-complexity = 40
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -67,6 +68,9 @@ warn_unused_configs = true
 no_implicit_optional = true
 strict_optional = true
 
+[tool.ruff]
+line-length = 100
+
 [tool.ruff.lint]
 select = [
     # pycodestyle
@@ -82,7 +86,7 @@ select = [
     # isort
     "I",
 ]
-ignore = ["E501", "I001", "SIM102"]
+ignore = ["E501", "I001", "SIM102", "UP045"]
 exclude = ["examples/*"]
 
 [tool.ruff.lint.isort]
