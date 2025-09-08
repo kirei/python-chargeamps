@@ -3,7 +3,6 @@
 import asyncio  # noqa
 import time
 from datetime import datetime
-from typing import Optional
 from urllib.parse import urljoin
 import logging
 
@@ -31,7 +30,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         email: str,
         password: str,
         api_key: str,
-        api_base_url: Optional[str] = None,
+        api_base_url: str | None = None,
     ):
         self._logger = logging.getLogger(__name__).getChild(self.__class__.__name__)
         self._email = email
@@ -140,8 +139,8 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
     async def get_all_chargingsessions(
         self,
         charge_point_id: str,
-        start_time: Optional[datetime] = None,
-        end_time: Optional[datetime] = None,
+        start_time: datetime | None = None,
+        end_time: datetime | None = None,
     ) -> list[ChargingSession]:
         """Get all charging sessions"""
         query_params = {}
