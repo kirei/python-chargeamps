@@ -33,8 +33,8 @@ class ChargePoint(FrozenBaseSchema):
     password: str
     type: str
     is_loadbalanced: bool
-    firmware_version: str
-    hardware_version: str
+    firmware_version: str | None = None
+    hardware_version: str | None = None
     connectors: list[ChargePointConnector]
 
 
