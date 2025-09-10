@@ -64,7 +64,7 @@ class ChargePointStatus(FrozenBaseSchema):
 class ChargePointSettings(FrozenBaseSchema):
     id: str
     dimmer: str
-    down_light: bool
+    down_light: bool | None = None
 
 
 class ChargePointConnectorSettings(FrozenBaseSchema):
