@@ -36,6 +36,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._email = email
         self._password = password
         self._api_key = api_key
+        self._owns_client = httpx_client is None
         self._httpx_client = httpx_client or httpx.AsyncClient()
         self._headers = {}
         self._base_url = api_base_url or API_BASE_URL
@@ -44,7 +45,8 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._refresh_token = None
 
     async def shutdown(self) -> None:
-        await self._httpx_client.aclose()
+        if self._owns_client:
+            await self._httpx_client.aclose()
 
     async def _ensure_token(self) -> None:
         if self._token_expire > time.time():
