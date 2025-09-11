@@ -1,14 +1,13 @@
 """Charge-Amps External API Client"""
 
 import asyncio  # noqa
+import logging
 import time
 from datetime import datetime
 from urllib.parse import urljoin
-import logging
 
+import httpx
 import jwt
-from aiohttp import ClientResponse, ClientSession
-from aiohttp.web import HTTPException
 
 from .base import ChargeAmpsClient
 from .models import (
@@ -31,21 +30,21 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         password: str,
         api_key: str,
         api_base_url: str | None = None,
+        httpx_client: httpx.AsyncClient | None = None,
     ):
         self._logger = logging.getLogger(__name__).getChild(self.__class__.__name__)
         self._email = email
         self._password = password
         self._api_key = api_key
-        self._session = ClientSession(raise_for_status=True)
+        self._httpx_client = httpx_client or httpx.AsyncClient()
         self._headers = {}
         self._base_url = api_base_url or API_BASE_URL
-        self._ssl = False
         self._token = None
         self._token_expire = 0
         self._refresh_token = None
 
     async def shutdown(self) -> None:
-        await self._session.close()
+        await self._httpx_client.aclose()
 
     async def _ensure_token(self) -> None:
         if self._token_expire > time.time():
@@ -61,14 +60,14 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         if self._refresh_token:
             try:
                 self._logger.info("Found refresh token, try refresh")
-                response = await self._session.post(
+                response = await self._httpx_client.post(
                     urljoin(self._base_url, f"/api/{API_VERSION}/auth/refreshToken"),
-                    ssl=self._ssl,
                     headers={"apiKey": self._api_key},
                     json={"token": self._token, "refreshToken": self._refresh_token},
                 )
+                response.raise_for_status()
                 self._logger.debug("Refresh successful")
-            except HTTPException:
+            except httpx.HTTPStatusError:
                 self._logger.warning("Token refresh failed")
                 self._token = None
                 self._refresh_token = None
@@ -78,14 +77,14 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         if self._token is None:
             try:
                 self._logger.debug("Try login")
-                response = await self._session.post(
+                response = await self._httpx_client.post(
                     urljoin(self._base_url, f"/api/{API_VERSION}/auth/login"),
-                    ssl=self._ssl,
                     headers={"apiKey": self._api_key},
                     json={"email": self._email, "password": self._password},
                 )
+                response.raise_for_status()
                 self._logger.debug("Login successful")
-            except HTTPException as exc:
+            except httpx.HTTPStatusError as exc:
                 self._logger.error("Login failed")
                 self._token = None
                 self._refresh_token = None
@@ -96,7 +95,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             self._logger.error("No response")
             return
 
-        response_payload = await response.json()
+        response_payload = response.json()
 
         self._token = response_payload["token"]
         self._refresh_token = response_payload["refreshToken"]
@@ -106,33 +105,39 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
         self._headers["Authorization"] = f"Bearer {self._token}"
 
-    async def _post(self, path, **kwargs) -> ClientResponse:
+    async def _post(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
-        return await self._session.post(
-            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
+        response = await self._httpx_client.post(
+            urljoin(self._base_url, path), headers=headers, **kwargs
         )
+        response.raise_for_status()
+        return response
 
-    async def _get(self, path, **kwargs) -> ClientResponse:
+    async def _get(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
-        return await self._session.get(
-            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
+        response = await self._httpx_client.get(
+            urljoin(self._base_url, path), headers=headers, **kwargs
         )
+        response.raise_for_status()
+        return response
 
-    async def _put(self, path, **kwargs) -> ClientResponse:
+    async def _put(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
-        return await self._session.put(
-            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
+        response = await self._httpx_client.put(
+            urljoin(self._base_url, path), headers=headers, **kwargs
         )
+        response.raise_for_status()
+        return response
 
     async def get_chargepoints(self) -> list[ChargePoint]:
         """Get all owned chargepoints"""
         request_uri = f"/api/{API_VERSION}/chargepoints/owned"
         response = await self._get(request_uri)
         res = []
-        for chargepoint in await response.json():
+        for chargepoint in response.json():
             res.append(ChargePoint.model_validate(chargepoint))
         return res
 
@@ -151,7 +156,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
         response = await self._get(request_uri, params=query_params)
         res = []
-        for session in await response.json():
+        for session in response.json():
             res.append(ChargingSession.model_validate(session))
         return res
 
@@ -161,21 +166,21 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions/{session}"
         )
         response = await self._get(request_uri)
-        payload = await response.json()
+        payload = response.json()
         return ChargingSession.model_validate(payload)
 
     async def get_chargepoint_status(self, charge_point_id: str) -> ChargePointStatus:
         """Get charge point status"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/status"
         response = await self._get(request_uri)
-        payload = await response.json()
+        payload = response.json()
         return ChargePointStatus.model_validate(payload)
 
     async def get_chargepoint_settings(self, charge_point_id: str) -> ChargePointSettings:
         """Get chargepoint settings"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/settings"
         response = await self._get(request_uri)
-        payload = await response.json()
+        payload = response.json()
         return ChargePointSettings.model_validate(payload)
 
     async def set_chargepoint_settings(self, settings: ChargePointSettings) -> None:
@@ -193,7 +198,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         )
         response = await self._get(request_uri)
-        payload = await response.json()
+        payload = response.json()
         return ChargePointConnectorSettings.model_validate(payload)
 
     async def set_chargepoint_connector_settings(

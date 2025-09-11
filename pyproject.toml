@@ -23,6 +23,7 @@ requires-python = ">=3.11,<4.0"
 dependencies = [
     "aiohttp>=3.12.15",
     "ciso8601>=2.3.3",
+    "httpx>=0.28.1",
     "isoduration>=20.11.0",
     "pydantic>=2.11.7",
     "pyjwt>=2.10.1",
