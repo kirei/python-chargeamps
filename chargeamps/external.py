@@ -111,7 +111,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def _post(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
-        headers = kwargs.pop("headers", self._headers)
+        headers = {**self._headers, **kwargs.pop("headers", {})}
         response = await self._httpx_client.post(
             urljoin(self._base_url, path), headers=headers, **kwargs
         )
@@ -120,7 +120,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def _get(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
-        headers = kwargs.pop("headers", self._headers)
+        headers = {**self._headers, **kwargs.pop("headers", {})}
         response = await self._httpx_client.get(
             urljoin(self._base_url, path), headers=headers, **kwargs
         )
@@ -129,7 +129,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
     async def _put(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
-        headers = kwargs.pop("headers", self._headers)
+        headers = {**self._headers, **kwargs.pop("headers", {})}
         response = await self._httpx_client.put(
             urljoin(self._base_url, path), headers=headers, **kwargs
         )
