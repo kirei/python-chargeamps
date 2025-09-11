@@ -37,7 +37,9 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._password = password
         self._api_key = api_key
         self._owns_client = httpx_client is None
-        self._httpx_client = httpx_client or httpx.AsyncClient()
+        self._httpx_client = httpx_client or httpx.AsyncClient(
+            timeout=httpx.Timeout(connect=5.0, read=15.0, write=15.0, pool=5.0)
+        )
         self._headers = {}
         self._base_url = api_base_url or API_BASE_URL
         self._token = None
