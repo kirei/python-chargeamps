@@ -109,30 +109,42 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
         self._headers["Authorization"] = f"Bearer {self._token}"
 
+    async def _httpx_retry(self, method, url, headers, **kwargs) -> httpx.Response:
+        try:
+            response = await method(url, headers=headers, **kwargs)
+            response.raise_for_status()
+            return response
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code == 401:
+                self._token = None
+                self._token_expire = 0
+                await self._ensure_token()
+                response = method(url, headers=headers, **kwargs)
+                response.raise_for_status()
+                return response
+            raise
+
     async def _post(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         headers = {**self._headers, **kwargs.pop("headers", {})}
-        response = await self._httpx_client.post(
-            urljoin(self._base_url, path), headers=headers, **kwargs
-        )
+        url = urljoin(self._base_url, path)
+        response = await self._httpx_retry(self._httpx_client.post, url, headers, **kwargs)
         response.raise_for_status()
         return response
 
     async def _get(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         headers = {**self._headers, **kwargs.pop("headers", {})}
-        response = await self._httpx_client.get(
-            urljoin(self._base_url, path), headers=headers, **kwargs
-        )
+        url = urljoin(self._base_url, path)
+        response = await self._httpx_retry(self._httpx_client.get, url, headers, **kwargs)
         response.raise_for_status()
         return response
 
     async def _put(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         headers = {**self._headers, **kwargs.pop("headers", {})}
-        response = await self._httpx_client.put(
-            urljoin(self._base_url, path), headers=headers, **kwargs
-        )
+        url = urljoin(self._base_url, path)
+        response = await self._httpx_retry(self._httpx_client.put, url, headers, **kwargs)
         response.raise_for_status()
         return response
 
