@@ -67,7 +67,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
                 )
                 response.raise_for_status()
                 self._logger.debug("Refresh successful")
-            except httpx.HTTPStatusError:
+            except (httpx.HTTPStatusError, httpx.RequestError):
                 self._logger.warning("Token refresh failed")
                 self._token = None
                 self._refresh_token = None
@@ -84,7 +84,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
                 )
                 response.raise_for_status()
                 self._logger.debug("Login successful")
-            except httpx.HTTPStatusError as exc:
+            except (httpx.HTTPStatusError, httpx.RequestError) as exc:
                 self._logger.error("Login failed")
                 self._token = None
                 self._refresh_token = None
