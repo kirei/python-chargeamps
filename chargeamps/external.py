@@ -44,13 +44,14 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._token = None
         self._token_expire = 0
         self._refresh_token = None
+        self._token_skew = 30
 
     async def shutdown(self) -> None:
         if self._owns_client:
             await self._httpx_client.aclose()
 
     async def _ensure_token(self) -> None:
-        if self._token_expire > time.time():
+        if self._token_expire - self._token_skew > time.time():
             return
 
         if self._token is None:
