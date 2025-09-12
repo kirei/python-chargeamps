@@ -1,6 +1,5 @@
 """Charge-Amps External API Client"""
 
-import asyncio  # noqa
 import logging
 import time
 from datetime import datetime
