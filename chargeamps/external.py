@@ -1,5 +1,6 @@
 """Charge-Amps External API Client"""
 
+import asyncio
 import logging
 import time
 from datetime import datetime
@@ -45,6 +46,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._token_expire = 0
         self._refresh_token = None
         self._token_skew = 30
+        self._token_lock = asyncio.Lock()
 
     async def shutdown(self) -> None:
         if self._owns_client:
@@ -59,6 +61,10 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         elif self._token_expire > 0:
             self._logger.info("Token expired")
 
+        async with self._token_lock:
+            await self._exclusive_ensure_token()
+
+    async def _exclusive_ensure_token(self) -> None:
         response = None
 
         if self._refresh_token:
