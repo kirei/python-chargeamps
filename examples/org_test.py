@@ -7,9 +7,7 @@ from chargeamps.organisation import OrganisationClient
 async def test():
     with open("config.json") as input_file:
         c = json.load(input_file)
-    client = OrganisationClient(
-        email=c["username"], password=c["password"], api_key=c["api_key"]
-    )
+    client = OrganisationClient(email=c["username"], password=c["password"], api_key=c["api_key"])
 
     chargepoints = await client.get_organisation_chargepoints()
     print(chargepoints)
