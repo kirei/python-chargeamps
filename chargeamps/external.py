@@ -53,6 +53,10 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             await self._httpx_client.aclose()
 
     async def _ensure_token(self) -> None:
+        async with self._token_lock:
+            await self._exclusive_ensure_token()
+
+    async def _exclusive_ensure_token(self) -> None:
         if self._token_expire - self._token_skew > time.time():
             return
 
@@ -61,11 +65,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         elif self._token_expire > 0:
             self._logger.info("Token expired")
 
-        async with self._token_lock:
-            await self._exclusive_ensure_token()
-
-    async def _exclusive_ensure_token(self) -> None:
-        response = None
+        response: httpx.Response | None = None
 
         if self._refresh_token:
             try:
