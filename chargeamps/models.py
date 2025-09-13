@@ -116,7 +116,7 @@ class User(FrozenBaseSchema):
     last_name: str | None
     email: str | None
     mobile: str | None
-    rfid_tags: Optional[list[RfidTag]]
+    rfid_tags: list[RfidTag] | None
     user_status: str
 
 
@@ -146,16 +146,16 @@ class Organisation(FrozenBaseSchema):
 @feature_required("organisations")
 class OrganisationChargingSession(FrozenBaseSchema):
     id: int
-    charge_point_id: Optional[str]
+    charge_point_id: str | None
     connector_id: int
     user_id: str
-    rfid: Optional[str]
-    rfidDec: Optional[str]
-    rfidDecReverse: Optional[str]
-    organisation_id: Optional[str]
+    rfid: str | None
+    rfidDec: str | None
+    rfidDecReverse: str | None
+    organisation_id: str | None
     session_type: str
-    start_time: Optional[CustomDateTime] = None
-    end_time: Optional[CustomDateTime] = None
-    external_transaction_id: Optional[str]
+    start_time: CustomDateTime | None = None
+    end_time: CustomDateTime | None = None
+    external_transaction_id: str | None
     total_consumption_kwh: float
-    external_id: Optional[str]
+    external_id: str | None
