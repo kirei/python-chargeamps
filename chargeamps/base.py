@@ -39,9 +39,7 @@ class ChargeAmpsClient(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    async def get_chargepoint_settings(
-        self, charge_point_id: str
-    ) -> ChargePointSettings:
+    async def get_chargepoint_settings(self, charge_point_id: str) -> ChargePointSettings:
         """Get chargepoint settings"""
         pass
 

@@ -1,17 +1,14 @@
 """Data models for ChargeAmps API"""
 
 from datetime import datetime
-from typing import Optional
+from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, PlainSerializer
 from pydantic.alias_generators import to_camel
-from typing_extensions import Annotated
 
 CustomDateTime = Annotated[
     datetime,
-    PlainSerializer(
-        lambda _datetime: _datetime.strftime("%Y-%m-%dT%H:%M:%SZ"), return_type=str
-    ),
+    PlainSerializer(lambda _datetime: _datetime.strftime("%Y-%m-%dT%H:%M:%SZ"), return_type=str),
 ]
 
 
@@ -46,8 +43,8 @@ class ChargePoint(FrozenBaseSchema):
     password: str
     type: str
     is_loadbalanced: bool
-    firmware_version: str
-    hardware_version: str
+    firmware_version: str | None = None
+    hardware_version: str | None = None
     connectors: list[ChargePointConnector]
 
 
@@ -62,10 +59,10 @@ class ChargePointConnectorStatus(FrozenBaseSchema):
     connector_id: int
     total_consumption_kwh: float
     status: str
-    measurements: Optional[list[ChargePointMeasurement]]
-    start_time: Optional[CustomDateTime] = None
-    end_time: Optional[CustomDateTime] = None
-    session_id: Optional[int] = None
+    measurements: list[ChargePointMeasurement] | None
+    start_time: CustomDateTime | None = None
+    end_time: CustomDateTime | None = None
+    session_id: int | None = None
 
 
 class ChargePointStatus(FrozenBaseSchema):
@@ -77,7 +74,7 @@ class ChargePointStatus(FrozenBaseSchema):
 class ChargePointSettings(FrozenBaseSchema):
     id: str
     dimmer: str
-    down_light: bool
+    down_light: bool | None = None
 
 
 class ChargePointConnectorSettings(FrozenBaseSchema):
@@ -86,7 +83,7 @@ class ChargePointConnectorSettings(FrozenBaseSchema):
     mode: str
     rfid_lock: bool
     cable_lock: bool
-    max_current: Optional[float] = None
+    max_current: float | None = None
 
 
 class ChargingSession(FrozenBaseSchema):
@@ -95,8 +92,8 @@ class ChargingSession(FrozenBaseSchema):
     connector_id: int
     session_type: str
     total_consumption_kwh: float
-    start_time: Optional[CustomDateTime] = None
-    end_time: Optional[CustomDateTime] = None
+    start_time: CustomDateTime | None = None
+    end_time: CustomDateTime | None = None
 
 
 class StartAuth(FrozenBaseSchema):
