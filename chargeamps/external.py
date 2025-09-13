@@ -136,25 +136,19 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         await self._ensure_token()
         url = urljoin(self._base_url, path)
         headers = kwargs.pop("headers", {})
-        response = await self._httpx_retry(self._httpx_client.post, url, headers, **kwargs)
-        response.raise_for_status()
-        return response
+        return await self._httpx_retry(self._httpx_client.post, url, headers, **kwargs)
 
     async def _get(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         url = urljoin(self._base_url, path)
         headers = kwargs.pop("headers", {})
-        response = await self._httpx_retry(self._httpx_client.get, url, headers, **kwargs)
-        response.raise_for_status()
-        return response
+        return await self._httpx_retry(self._httpx_client.get, url, headers, **kwargs)
 
     async def _put(self, path, **kwargs) -> httpx.Response:
         await self._ensure_token()
         url = urljoin(self._base_url, path)
         headers = kwargs.pop("headers", {})
-        response = await self._httpx_retry(self._httpx_client.put, url, headers, **kwargs)
-        response.raise_for_status()
-        return response
+        return await self._httpx_retry(self._httpx_client.put, url, headers, **kwargs)
 
     async def get_chargepoints(self) -> list[ChargePoint]:
         """Get all owned chargepoints"""
