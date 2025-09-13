@@ -17,6 +17,8 @@ from .models import (
     ChargePointStatus,
     ChargingSession,
     StartAuth,
+    User,
+    Partner,
 )
 
 API_BASE_URL = "https://eapi.charge.space"
@@ -47,6 +49,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         self._refresh_token = None
         self._token_skew = 30
         self._token_lock = asyncio.Lock()
+        self._user: User = None
 
     async def shutdown(self) -> None:
         if self._owns_client:
@@ -80,6 +83,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             except (httpx.HTTPStatusError, httpx.RequestError):
                 self._logger.warning("Token refresh failed")
                 self._token = None
+                self._user = None
                 self._refresh_token = None
         else:
             self._token = None
@@ -97,6 +101,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
             except (httpx.HTTPStatusError, httpx.RequestError) as exc:
                 self._logger.error("Login failed")
                 self._token = None
+                self._user = None
                 self._refresh_token = None
                 self._token_expire = 0
                 raise exc
@@ -107,6 +112,7 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
 
         response_payload = response.json()
         self._token = response_payload["token"]
+        self._user = response_payload["user"]
         self._refresh_token = response_payload.get("refreshToken", self._refresh_token)
         token_payload = jwt.decode(self._token, options={"verify_signature": False})
         self._token_expire = int(token_payload.get("exp", 0))
@@ -229,6 +235,13 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         )
         await self._put(request_uri, json=payload)
 
+    async def get_partner(self, charge_point_id: str) -> Partner:
+        """Get partner details"""
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/partner"
+        response = await self._get(request_uri)
+        payload = await response.json()
+        return Partner.model_validate(payload)
+
     async def remote_start(
         self, charge_point_id: str, connector_id: int, start_auth: StartAuth
     ) -> None:
@@ -246,3 +259,16 @@ class ChargeAmpsExternalClient(ChargeAmpsClient):
         """Reboot chargepoint"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/reboot"
         await self._put(request_uri, json="{}")
+
+    async def get_logged_in_user(self) -> User:
+        """Get authenticated user info"""
+        if not self._user or not isinstance(self._user, dict):
+            raise ValueError("No user is currently logged in")
+
+        user_id = self._user["id"]
+
+        request_uri = f"/api/{API_VERSION}/users/{user_id}"
+        response = await self._get(request_uri)
+        payload = await response.json()
+
+        return User.model_validate(payload)
