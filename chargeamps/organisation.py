@@ -1,17 +1,17 @@
-from datetime import datetime
 import textwrap
+from datetime import datetime
 
 from chargeamps.external import ChargeAmpsExternalClient
 
 from .models import (
     ChargePoint,
     ChargePointStatus,
+    Organisation,
+    OrganisationChargingSession,
+    Partner,
     Rfid,
     RfidTag,
-    Partner,
-    Organisation,
     User,
-    OrganisationChargingSession,
     feature_required,
 )
 
@@ -53,9 +53,7 @@ class OrganisationClient(ChargeAmpsExternalClient):
 
         return [ChargePoint.model_validate(cp) for cp in payload]
 
-    async def get_organisation_chargepoint_statuses(
-        self, org_id: str
-    ) -> list[ChargePointStatus]:
+    async def get_organisation_chargepoint_statuses(self, org_id: str) -> list[ChargePointStatus]:
         """Get all charge points' status"""
         request_uri = f"/api/{API_VERSION}/organisations/{org_id}/chargepoints/statuses"
         response = await self._get(request_uri)
@@ -70,10 +68,12 @@ class OrganisationClient(ChargeAmpsExternalClient):
         length_in_bytes = len(rfid) // 2
 
         if length and length != length_in_bytes:
-            raise ValueError(textwrap.dedent(f"""
+            raise ValueError(
+                textwrap.dedent(f"""
                 The provided RFID does not match the provided length:
                 RFID {rfid}, expected length: {length}, calculated length: {length_in_bytes}
-            """))
+            """)
+            )
 
         if length_in_bytes in {4, 7, 10}:
             return length_in_bytes
@@ -81,7 +81,11 @@ class OrganisationClient(ChargeAmpsExternalClient):
             raise ValueError("RFID length invalid, should be either 4, 7 or 10 bytes")
 
     def verify_rfid(
-        self, rfid: str, rfid_format: str | None, rfid_length: str | None, rfid_dec_format_length: str | None
+        self,
+        rfid: str,
+        rfid_format: str | None,
+        rfid_length: str | None,
+        rfid_dec_format_length: str | None,
     ) -> dict[str, str]:
         result = {}
         if self.is_valid_hex(rfid):
@@ -96,7 +100,9 @@ class OrganisationClient(ChargeAmpsExternalClient):
 
         if rfid_format == "Hex":
             if rfid_actual_length != 7:
-                raise ValueError(f"RFID length must be 7 bytes if the (default) format type 'Hex' is set.")
+                raise ValueError(
+                    "RFID length must be 7 bytes if the (default) format type 'Hex' is set."
+                )
         elif rfid_format == "Dec" or rfid_format == "ReverseDec":
             if rfid_dec_format_length:
                 result["rfidDecimalFormatLength"] = rfid_dec_format_length
@@ -109,7 +115,7 @@ class OrganisationClient(ChargeAmpsExternalClient):
         self,
         org_id: str,
         start_time: datetime | None = None,
-        end_time: datetime | None  = None,
+        end_time: datetime | None = None,
         rfid: str | None = None,
         rfid_format: str = "Hex",  # Possible values: "Hex", "Dec" and "ReverseDec"
         rfid_length: int = None,
@@ -167,12 +173,14 @@ class OrganisationClient(ChargeAmpsExternalClient):
         rfid: str,
         rfid_format: str = "Hex",  # Possible values: "Hex", "Dec" and "ReverseDec"
         rfid_length: int | None = None,
-        rfid_dec_format_length: int | None = None
+        rfid_dec_format_length: int | None = None,
     ) -> RfidTag:
         """Get information about a specific RFID tag"""
         request_uri = f"/api/{API_VERSION}/organisations/{org_id}/rfids/{rfid}"
         query_params = {"organisationId": org_id}
-        query_params.update(self.verify_rfid(rfid, rfid_format, rfid_length, rfid_dec_format_length))
+        query_params.update(
+            self.verify_rfid(rfid, rfid_format, rfid_length, rfid_dec_format_length)
+        )
 
         response = await self._get(request_uri, params=query_params)
         payload = await response.json()
